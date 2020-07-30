@@ -120,15 +120,22 @@ void main(void)
 		Delay5us();
 		SendString("\r\n");								//换行
 		
-		value = MPU6050_Get_Data(4);					//获取与y轴加速度，数值被放大100倍
+		value = MPU6050_Get_Data(5);					//获取与y轴加速度，数值被放大100倍
 		SendString("y轴加速度：");
 		Delay5us();
 		serial_one_send_float(value / 100,1);			//角度除以100，并从串口发出
 		Delay5us();
 		SendString("\r\n");								//换行
 		
-		value = MPU6050_Get_Data(4);					//获取与z轴加速度，数值被放大100倍
+		value = MPU6050_Get_Data(6);					//获取与z轴加速度，数值被放大100倍
 		SendString("z轴加速度：");
+		Delay5us();
+		serial_one_send_float(value / 100,1);			//角度除以100，并从串口发出
+		Delay5us();
+		SendString("\r\n");								//换行
+
+		value = MPU6050_Get_Data(7);					//获取与温度
+		SendString("当前温度为：");
 		Delay5us();
 		serial_one_send_float(value / 100,1);			//角度除以100，并从串口发出
 		Delay5us();
@@ -400,6 +407,7 @@ int MPU6050_Get_Data(unsigned angle_id)
 		case 4:return (int)((float)((float)Get_Gyro_Data(4)/16384)*9.8*100);
 		case 5:return (int)((float)((float)Get_Gyro_Data(5)/16384)*9.8*100);
 		case 6:return (int)((float)((float)Get_Gyro_Data(6)/16384)*9.8*100);
+		case 7:return (int)(((float)((float)GetData(TEMP_OUT_H)/340)+36.53)*100);
 	}
 	return 0;
 }

@@ -1,4 +1,4 @@
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                    07/30/2020  22:25:52  PAGE 1
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                    07/31/2020  07:55:37  PAGE 1
 
 
 BL51 BANKED LINKER/LOCATER V6.22.2.0, INVOKED BY:
@@ -59,37 +59,37 @@ LINK MAP OF MODULE:  .\Objects\mpu6050-Test (MAIN)
             CODE    0003H     001AH     UNIT         ?PR?_GETDATA?MAIN
                     001DH     0006H                  *** GAP ***
             CODE    0023H     0003H     ABSOLUTE     
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/30/2020  22:25:52  PAGE 2
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/31/2020  07:55:37  PAGE 2
 
 
             CODE    0026H     05D5H     UNIT         ?C?LIB_CODE
             CODE    05FBH     01DAH     UNIT         ?PR?_MPU6050_GET_ANGLE?MAIN
-            CODE    07D5H     0139H     UNIT         ?PR?MAIN?MAIN
-            CODE    090EH     0128H     UNIT         ?PR?ATAN?ATAN
-            CODE    0A36H     00EFH     UNIT         ?PR?_SERIAL_ONE_SEND_FLOAT?MAIN
-            CODE    0B25H     00ECH     UNIT         ?PR?_SERIAL_ONE_SEND_NUMBER?MAIN
-            CODE    0C11H     00AAH     UNIT         ?PR?SQRT?SQRT
-            CODE    0CBBH     00A9H     UNIT         ?PR?_MPU6050_GET_DATA?MAIN
-            CODE    0D64H     008CH     UNIT         ?C_C51STARTUP
-            CODE    0DF0H     0072H     UNIT         ?CO?MAIN
-            CODE    0E62H     0044H     UNIT         ?C?LDIV
-            CODE    0EA6H     003BH     UNIT         ?PR?MPU6050_INIT?MAIN
-            CODE    0EE1H     0038H     UNIT         ?PR?_GET_GYRO_DATA?MAIN
-            CODE    0F19H     002BH     UNIT         ?PR?_SENDSTRING?MAIN
-            CODE    0F44H     0029H     UNIT         ?PR?I2C_RECVBYTE?MAIN
-            CODE    0F6DH     0027H     UNIT         ?PR?_I2C_SENDBYTE?MAIN
-            CODE    0F94H     0027H     UNIT         ?PR?_SINGLE_READI2C?MAIN
-            CODE    0FBBH     0019H     UNIT         ?PR?_SINGLE_WRITEI2C?MAIN
-            CODE    0FD4H     0018H     UNIT         ?PR?UART?MAIN
-            CODE    0FECH     0011H     UNIT         ?PR?I2C_RECVACK?MAIN
-            CODE    0FFDH     000FH     UNIT         ?PR?DELAY1000MS?MAIN
-            CODE    100CH     000FH     UNIT         ?PR?I2C_START?MAIN
-            CODE    101BH     000EH     UNIT         ?PR?I2C_SENDACK?MAIN
-            CODE    1029H     000CH     UNIT         ?PR?I2C_STOP?MAIN
-            CODE    1035H     000AH     UNIT         ?PR?UART_INIT?MAIN
-            CODE    103FH     0009H     UNIT         ?PR?_SENDDATA?MAIN
-            CODE    1048H     0007H     UNIT         ?PR?DELAY5US?MAIN
-            CODE    104FH     0007H     UNIT         ?C_INITSEG
+            CODE    07D5H     0171H     UNIT         ?PR?MAIN?MAIN
+            CODE    0946H     0128H     UNIT         ?PR?ATAN?ATAN
+            CODE    0A6EH     00EFH     UNIT         ?PR?_SERIAL_ONE_SEND_FLOAT?MAIN
+            CODE    0B5DH     00ECH     UNIT         ?PR?_SERIAL_ONE_SEND_NUMBER?MAIN
+            CODE    0C49H     00E5H     UNIT         ?PR?_MPU6050_GET_DATA?MAIN
+            CODE    0D2EH     00AAH     UNIT         ?PR?SQRT?SQRT
+            CODE    0DD8H     008CH     UNIT         ?C_C51STARTUP
+            CODE    0E64H     007FH     UNIT         ?CO?MAIN
+            CODE    0EE3H     0044H     UNIT         ?C?LDIV
+            CODE    0F27H     003BH     UNIT         ?PR?MPU6050_INIT?MAIN
+            CODE    0F62H     0038H     UNIT         ?PR?_GET_GYRO_DATA?MAIN
+            CODE    0F9AH     002BH     UNIT         ?PR?_SENDSTRING?MAIN
+            CODE    0FC5H     0029H     UNIT         ?PR?I2C_RECVBYTE?MAIN
+            CODE    0FEEH     0027H     UNIT         ?PR?_I2C_SENDBYTE?MAIN
+            CODE    1015H     0027H     UNIT         ?PR?_SINGLE_READI2C?MAIN
+            CODE    103CH     0019H     UNIT         ?PR?_SINGLE_WRITEI2C?MAIN
+            CODE    1055H     0018H     UNIT         ?PR?UART?MAIN
+            CODE    106DH     0011H     UNIT         ?PR?I2C_RECVACK?MAIN
+            CODE    107EH     000FH     UNIT         ?PR?DELAY1000MS?MAIN
+            CODE    108DH     000FH     UNIT         ?PR?I2C_START?MAIN
+            CODE    109CH     000EH     UNIT         ?PR?I2C_SENDACK?MAIN
+            CODE    10AAH     000CH     UNIT         ?PR?I2C_STOP?MAIN
+            CODE    10B6H     000AH     UNIT         ?PR?UART_INIT?MAIN
+            CODE    10C0H     0009H     UNIT         ?PR?_SENDDATA?MAIN
+            CODE    10C9H     0007H     UNIT         ?PR?DELAY5US?MAIN
+            CODE    10D0H     0007H     UNIT         ?C_INITSEG
 
 
 
@@ -119,7 +119,7 @@ SEGMENT                                     BIT_GROUP          DATA_GROUP       
 
 ?PR?MPU6050_INIT?MAIN                    -----    -----      -----    -----      -----    -----
   +--> ?PR?DELAY1000MS?MAIN
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/30/2020  22:25:52  PAGE 3
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/31/2020  07:55:37  PAGE 3
 
 
   +--> ?PR?_SINGLE_WRITEI2C?MAIN
@@ -147,6 +147,7 @@ SEGMENT                                     BIT_GROUP          DATA_GROUP       
 ?PR?_MPU6050_GET_DATA?MAIN               -----    -----      -----    -----      -----    -----
   +--> ?PR?_GET_GYRO_DATA?MAIN
   +--> ?PR?_MPU6050_GET_ANGLE?MAIN
+  +--> ?PR?_GETDATA?MAIN
 
 ?PR?_GET_GYRO_DATA?MAIN                  -----    -----      -----    -----      -----    -----
   +--> ?PR?_GETDATA?MAIN
@@ -178,8 +179,8 @@ SEGMENT                                     BIT_GROUP          DATA_GROUP       
 ?PR?_SERIAL_ONE_SEND_FLOAT?MAIN          -----    -----      0008H    0005H      0000H    0008H
   +--> ?PR?_SENDDATA?MAIN
   +--> ?PR?_SERIAL_ONE_SEND_NUMBER?MAIN
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/31/2020  07:55:37  PAGE 4
 
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/30/2020  22:25:52  PAGE 4
 
 
 ?PR?_SERIAL_ONE_SEND_NUMBER?MAIN         -----    -----      000DH    0009H      -----    -----
@@ -198,38 +199,38 @@ SYMBOL TABLE OF MODULE:  .\Objects\mpu6050-Test (MAIN)
   D:0080H         PUBLIC        P0
   D:0095H         PUBLIC        P2M1
   D:0090H         PUBLIC        P1
-  C:0EE7H         PUBLIC        _Get_Gyro_Data
-  C:0FECH         PUBLIC        I2C_RecvACK
+  C:0F68H         PUBLIC        _Get_Gyro_Data
+  C:106DH         PUBLIC        I2C_RecvACK
   D:00A0H         PUBLIC        P2
   D:00B0H         PUBLIC        P3
-  C:0F94H         PUBLIC        _Single_ReadI2C
+  C:1015H         PUBLIC        _Single_ReadI2C
   D:00C0H         PUBLIC        P4
   D:00C8H         PUBLIC        P5
   B:00A8H.7       PUBLIC        EA
   D:00E8H         PUBLIC        P6
   D:00F8H         PUBLIC        P7
-  C:0F1FH         PUBLIC        _SendString
-  C:103FH         PUBLIC        _SendData
+  C:0FA0H         PUBLIC        _SendString
+  C:10C0H         PUBLIC        _SendData
   C:05FBH         PUBLIC        _MPU6050_Get_Angle
   D:00A2H         PUBLIC        P_SW1
   D:00A8H         PUBLIC        IE
-  C:1048H         PUBLIC        Delay5us
-  C:0FBBH         PUBLIC        _Single_WriteI2C
-  C:0FFDH         PUBLIC        Delay1000ms
+  C:10C9H         PUBLIC        Delay5us
+  C:103CH         PUBLIC        _Single_WriteI2C
+  C:107EH         PUBLIC        Delay1000ms
   B:00A8H.4       PUBLIC        ES
   D:00B8H         PUBLIC        IP
   B:0098H.0       PUBLIC        RI
   B:00D0H.7       PUBLIC        CY
   B:0098H.1       PUBLIC        TI
-  C:0FD4H         PUBLIC        Uart
-  C:0CBFH         PUBLIC        _MPU6050_Get_Data
+  C:1055H         PUBLIC        Uart
+  C:0C49H         PUBLIC        _MPU6050_Get_Data
   C:0003H         PUBLIC        _GetData
   D:0016H         PUBLIC        value
-  C:0B25H         PUBLIC        _serial_one_send_number
+  C:0B5DH         PUBLIC        _serial_one_send_number
   D:00D8H         PUBLIC        CCON
   C:07D5H         PUBLIC        main
-  C:0A4BH         PUBLIC        _serial_one_send_float
-  C:100CH         PUBLIC        I2C_Start
+  C:0A83H         PUBLIC        _serial_one_send_float
+  C:108DH         PUBLIC        I2C_Start
   D:0099H         PUBLIC        SBUF
   B:00A0H.0       PUBLIC        P20
   B:00A0H.1       PUBLIC        P21
@@ -237,25 +238,25 @@ SYMBOL TABLE OF MODULE:  .\Objects\mpu6050-Test (MAIN)
   B:00A0H.2       PUBLIC        P22
   D:0088H         PUBLIC        TCON
   B:00A0H.3       PUBLIC        P23
-  C:0EA6H         PUBLIC        mpu6050_init
+  C:0F27H         PUBLIC        mpu6050_init
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/31/2020  07:55:37  PAGE 5
+
+
   B:00C8H.4       PUBLIC        P54
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/30/2020  22:25:52  PAGE 5
-
-
   B:00A0H.7       PUBLIC        P27
   D:008EH         PUBLIC        AUXR
-  C:0F6DH         PUBLIC        _I2C_SendByte
+  C:0FEEH         PUBLIC        _I2C_SendByte
   B:0020H.2       PUBLIC        busy
-  C:1029H         PUBLIC        I2C_Stop
+  C:10AAH         PUBLIC        I2C_Stop
   D:00E0H         PUBLIC        ACC
-  C:0F44H         PUBLIC        I2C_RecvByte
+  C:0FC5H         PUBLIC        I2C_RecvByte
   B:0098H.2       PUBLIC        RB8
   D:00D6H         PUBLIC        T2H
   B:00D0H.0       PUBLIC        P
   D:00D7H         PUBLIC        T2L
-  C:1035H         PUBLIC        uart_init
+  C:10B6H         PUBLIC        uart_init
   D:00D0H         PUBLIC        PSW
-  C:101BH         PUBLIC        I2C_SendACK
+  C:109CH         PUBLIC        I2C_SendACK
   -------         PROC          MAIN
   C:07D5H         LINE#         81
   C:07D5H         LINE#         82
@@ -275,252 +276,258 @@ SYMBOL TABLE OF MODULE:  .\Objects\mpu6050-Test (MAIN)
   C:080EH         LINE#         96
   C:0817H         LINE#         97
   C:081AH         LINE#         98
-  C:081DH         LINE#         99
-  C:0820H         LINE#         100
-  C:0823H         LINE#         102
-  C:083AH         LINE#         103
-  C:0843H         LINE#         104
-  C:0846H         LINE#         105
-  C:0849H         LINE#         106
-  C:084CH         LINE#         107
-  C:084FH         LINE#         109
-  C:0866H         LINE#         110
-  C:086FH         LINE#         111
-  C:0872H         LINE#         112
-  C:0875H         LINE#         113
-  C:0878H         LINE#         114
-  C:087BH         LINE#         116
-  C:088EH         LINE#         117
-  C:0897H         LINE#         118
-  C:089AH         LINE#         119
-  C:08A1H         LINE#         120
-  C:08A4H         LINE#         121
-  C:08A7H         LINE#         123
-  C:08BAH         LINE#         124
-  C:08C3H         LINE#         125
-  C:08C6H         LINE#         126
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/30/2020  22:25:52  PAGE 6
+  C:0821H         LINE#         99
+  C:0824H         LINE#         100
+  C:0827H         LINE#         102
+  C:083EH         LINE#         103
+  C:0847H         LINE#         104
+  C:084AH         LINE#         105
+  C:0854H         LINE#         106
+  C:0857H         LINE#         107
+  C:085AH         LINE#         109
+  C:0871H         LINE#         110
+  C:087AH         LINE#         111
+  C:087DH         LINE#         112
+  C:0887H         LINE#         113
+  C:088AH         LINE#         114
+  C:088DH         LINE#         116
+  C:08A4H         LINE#         117
+  C:08ADH         LINE#         118
+  C:08B0H         LINE#         119
+  C:08B3H         LINE#         120
+  C:08B6H         LINE#         121
+  C:08B9H         LINE#         123
+  C:08D0H         LINE#         124
+  C:08D9H         LINE#         125
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/31/2020  07:55:37  PAGE 6
 
 
-  C:08D0H         LINE#         127
-  C:08D3H         LINE#         128
-  C:08D6H         LINE#         130
-  C:08E9H         LINE#         131
-  C:08F2H         LINE#         132
-  C:08F5H         LINE#         133
-  C:08FFH         LINE#         134
-  C:0902H         LINE#         135
-  C:0905H         LINE#         136
-  C:0908H         LINE#         137
-  C:090BH         LINE#         138
+  C:08DCH         LINE#         126
+  C:08DFH         LINE#         127
+  C:08E2H         LINE#         128
+  C:08E5H         LINE#         130
+  C:08FCH         LINE#         131
+  C:0905H         LINE#         132
+  C:0908H         LINE#         133
+  C:090BH         LINE#         134
+  C:090EH         LINE#         135
+  C:0911H         LINE#         137
+  C:0928H         LINE#         138
+  C:0931H         LINE#         139
+  C:0934H         LINE#         140
+  C:0937H         LINE#         141
+  C:093AH         LINE#         142
+  C:093DH         LINE#         143
+  C:0940H         LINE#         144
+  C:0943H         LINE#         145
   -------         ENDPROC       MAIN
   -------         PROC          MPU6050_INIT
-  C:0EA6H         LINE#         144
-  C:0EA6H         LINE#         145
-  C:0EA6H         LINE#         147
-  C:0EA9H         LINE#         148
-  C:0EACH         LINE#         150
-  C:0EAEH         LINE#         151
-  C:0EB0H         LINE#         153
-  C:0EB2H         LINE#         155
-  C:0EB5H         LINE#         156
-  C:0EBCH         LINE#         157
-  C:0EC3H         LINE#         158
-  C:0ECAH         LINE#         159
-  C:0ED1H         LINE#         160
-  C:0ED8H         LINE#         161
+  C:0F27H         LINE#         151
+  C:0F27H         LINE#         152
+  C:0F27H         LINE#         154
+  C:0F2AH         LINE#         155
+  C:0F2DH         LINE#         157
+  C:0F2FH         LINE#         158
+  C:0F31H         LINE#         160
+  C:0F33H         LINE#         162
+  C:0F36H         LINE#         163
+  C:0F3DH         LINE#         164
+  C:0F44H         LINE#         165
+  C:0F4BH         LINE#         166
+  C:0F52H         LINE#         167
+  C:0F59H         LINE#         168
   -------         ENDPROC       MPU6050_INIT
   -------         PROC          UART_INIT
-  C:1035H         LINE#         165
-  C:1035H         LINE#         166
-  C:1035H         LINE#         167
-  C:1037H         LINE#         168
-  C:1039H         LINE#         169
-  C:103BH         LINE#         171
-  C:103EH         LINE#         177
+  C:10B6H         LINE#         172
+  C:10B6H         LINE#         173
+  C:10B6H         LINE#         174
+  C:10B8H         LINE#         175
+  C:10BAH         LINE#         176
+  C:10BCH         LINE#         178
+  C:10BFH         LINE#         184
   -------         ENDPROC       UART_INIT
   -------         PROC          DELAY5US
   -------         DO            
   D:0007H         SYMBOL        i
   -------         ENDDO         
-  C:1048H         LINE#         180
-  C:1048H         LINE#         181
-  C:1048H         LINE#         184
-  C:1049H         LINE#         185
-  C:104AH         LINE#         186
-  C:104CH         LINE#         187
-  C:104EH         LINE#         188
+  C:10C9H         LINE#         187
+  C:10C9H         LINE#         188
+  C:10C9H         LINE#         191
+  C:10CAH         LINE#         192
+  C:10CBH         LINE#         193
+  C:10CDH         LINE#         194
+  C:10CFH         LINE#         195
   -------         ENDPROC       DELAY5US
   -------         PROC          DELAY1000MS
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/31/2020  07:55:37  PAGE 7
+
+
   -------         DO            
   D:0007H         SYMBOL        i
   D:0006H         SYMBOL        j
   D:0005H         SYMBOL        k
   -------         ENDDO         
-  C:0FFDH         LINE#         191
-  C:0FFDH         LINE#         192
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/30/2020  22:25:52  PAGE 7
-
-
-  C:0FFDH         LINE#         195
-  C:0FFEH         LINE#         196
-  C:0FFFH         LINE#         197
-  C:1001H         LINE#         198
-  C:1003H         LINE#         199
-  C:1005H         LINE#         201
-  C:1005H         LINE#         203
-  C:1005H         LINE#         204
-  C:1007H         LINE#         205
-  C:1009H         LINE#         206
-  C:100BH         LINE#         207
+  C:107EH         LINE#         198
+  C:107EH         LINE#         199
+  C:107EH         LINE#         202
+  C:107FH         LINE#         203
+  C:1080H         LINE#         204
+  C:1082H         LINE#         205
+  C:1084H         LINE#         206
+  C:1086H         LINE#         208
+  C:1086H         LINE#         210
+  C:1086H         LINE#         211
+  C:1088H         LINE#         212
+  C:108AH         LINE#         213
+  C:108CH         LINE#         214
   -------         ENDPROC       DELAY1000MS
   -------         PROC          _SENDDATA
   D:0007H         SYMBOL        dat
-  C:103FH         LINE#         210
-  C:103FH         LINE#         211
-  C:103FH         LINE#         212
-  C:1042H         LINE#         213
-  C:1043H         LINE#         214
-  C:1043H         LINE#         215
-  C:1043H         LINE#         221
-  C:1043H         LINE#         223
-  C:1043H         LINE#         229
-  C:1043H         LINE#         230
-  C:1045H         LINE#         231
-  C:1047H         LINE#         232
+  C:10C0H         LINE#         217
+  C:10C0H         LINE#         218
+  C:10C0H         LINE#         219
+  C:10C3H         LINE#         220
+  C:10C4H         LINE#         221
+  C:10C4H         LINE#         222
+  C:10C4H         LINE#         228
+  C:10C4H         LINE#         230
+  C:10C4H         LINE#         236
+  C:10C4H         LINE#         237
+  C:10C6H         LINE#         238
+  C:10C8H         LINE#         239
   -------         ENDPROC       _SENDDATA
-  C:0F19H         SYMBOL        L?0097
-  -------         PROC          L?0096
-  -------         ENDPROC       L?0096
-  C:0F19H         SYMBOL        L?0097
+  C:0F9AH         SYMBOL        L?0101
+  -------         PROC          L?0100
+  -------         ENDPROC       L?0100
+  C:0F9AH         SYMBOL        L?0101
   -------         PROC          _SENDSTRING
   D:0008H         SYMBOL        s
-  C:0F1FH         LINE#         235
-  C:0F25H         LINE#         236
-  C:0F25H         LINE#         237
-  C:0F30H         LINE#         238
-  C:0F30H         LINE#         239
-  C:0F41H         LINE#         240
-  C:0F43H         LINE#         241
+  C:0FA0H         LINE#         242
+  C:0FA6H         LINE#         243
+  C:0FA6H         LINE#         244
+  C:0FB1H         LINE#         245
+  C:0FB1H         LINE#         246
+  C:0FC2H         LINE#         247
+  C:0FC4H         LINE#         248
   -------         ENDPROC       _SENDSTRING
   -------         PROC          I2C_START
-  C:100CH         LINE#         244
-  C:100CH         LINE#         245
-  C:100CH         LINE#         246
-  C:100EH         LINE#         247
-  C:1010H         LINE#         248
-  C:1013H         LINE#         249
-  C:1015H         LINE#         250
-  C:1018H         LINE#         251
-  C:101AH         LINE#         252
+  C:108DH         LINE#         251
+  C:108DH         LINE#         252
+  C:108DH         LINE#         253
+  C:108FH         LINE#         254
+  C:1091H         LINE#         255
+  C:1094H         LINE#         256
+  C:1096H         LINE#         257
+  C:1099H         LINE#         258
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/31/2020  07:55:37  PAGE 8
+
+
+  C:109BH         LINE#         259
   -------         ENDPROC       I2C_START
   -------         PROC          I2C_STOP
-  C:1029H         LINE#         255
-  C:1029H         LINE#         256
-  C:1029H         LINE#         257
-  C:102BH         LINE#         258
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/30/2020  22:25:52  PAGE 8
-
-
-  C:102DH         LINE#         259
-  C:1030H         LINE#         260
-  C:1032H         LINE#         261
+  C:10AAH         LINE#         262
+  C:10AAH         LINE#         263
+  C:10AAH         LINE#         264
+  C:10ACH         LINE#         265
+  C:10AEH         LINE#         266
+  C:10B1H         LINE#         267
+  C:10B3H         LINE#         268
   -------         ENDPROC       I2C_STOP
   -------         PROC          I2C_SENDACK
   B:0020H.0       SYMBOL        ack
-  C:101BH         LINE#         265
-  C:101BH         LINE#         266
-  C:101BH         LINE#         267
-  C:101FH         LINE#         268
-  C:1021H         LINE#         269
-  C:1024H         LINE#         270
-  C:1026H         LINE#         271
+  C:109CH         LINE#         272
+  C:109CH         LINE#         273
+  C:109CH         LINE#         274
+  C:10A0H         LINE#         275
+  C:10A2H         LINE#         276
+  C:10A5H         LINE#         277
+  C:10A7H         LINE#         278
   -------         ENDPROC       I2C_SENDACK
   -------         PROC          I2C_RECVACK
   -------         DO            
   B:0020H.0       SYMBOL        ack
   -------         ENDDO         
-  C:0FECH         LINE#         275
-  C:0FECH         LINE#         276
-  C:0FECH         LINE#         278
-  C:0FEEH         LINE#         279
-  C:0FF1H         LINE#         280
-  C:0FF5H         LINE#         281
-  C:0FF7H         LINE#         282
-  C:0FFAH         LINE#         283
-  C:0FFCH         LINE#         284
+  C:106DH         LINE#         282
+  C:106DH         LINE#         283
+  C:106DH         LINE#         285
+  C:106FH         LINE#         286
+  C:1072H         LINE#         287
+  C:1076H         LINE#         288
+  C:1078H         LINE#         289
+  C:107BH         LINE#         290
+  C:107DH         LINE#         291
   -------         ENDPROC       I2C_RECVACK
   -------         PROC          _I2C_SENDBYTE
   D:0006H         SYMBOL        dat
   -------         DO            
   D:0005H         SYMBOL        i
   -------         ENDDO         
-  C:0F6DH         LINE#         287
-  C:0F6FH         LINE#         288
-  C:0F6FH         LINE#         290
-  C:0F7BH         LINE#         291
-  C:0F7BH         LINE#         292
-  C:0F7FH         LINE#         293
-  C:0F81H         LINE#         294
-  C:0F83H         LINE#         295
-  C:0F86H         LINE#         296
-  C:0F88H         LINE#         297
-  C:0F8BH         LINE#         298
-  C:0F8EH         LINE#         299
-  C:0F93H         LINE#         300
+  C:0FEEH         LINE#         294
+  C:0FF0H         LINE#         295
+  C:0FF0H         LINE#         297
+  C:0FFCH         LINE#         298
+  C:0FFCH         LINE#         299
+  C:1000H         LINE#         300
+  C:1002H         LINE#         301
+  C:1004H         LINE#         302
+  C:1007H         LINE#         303
+  C:1009H         LINE#         304
+  C:100CH         LINE#         305
+  C:100FH         LINE#         306
+  C:1014H         LINE#         307
   -------         ENDPROC       _I2C_SENDBYTE
   -------         PROC          I2C_RECVBYTE
   -------         DO            
   D:0005H         SYMBOL        i
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/31/2020  07:55:37  PAGE 9
+
+
   D:0006H         SYMBOL        dat
   -------         ENDDO         
-  C:0F44H         LINE#         303
-  C:0F44H         LINE#         304
-  C:0F44H         LINE#         306
-  C:0F46H         LINE#         307
-  C:0F48H         LINE#         308
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/30/2020  22:25:52  PAGE 9
-
-
-  C:0F53H         LINE#         309
-  C:0F53H         LINE#         310
-  C:0F57H         LINE#         311
-  C:0F59H         LINE#         312
-  C:0F5CH         LINE#         313
-  C:0F62H         LINE#         314
-  C:0F64H         LINE#         315
-  C:0F67H         LINE#         316
-  C:0F6AH         LINE#         317
-  C:0F6CH         LINE#         318
+  C:0FC5H         LINE#         310
+  C:0FC5H         LINE#         311
+  C:0FC5H         LINE#         313
+  C:0FC7H         LINE#         314
+  C:0FC9H         LINE#         315
+  C:0FD4H         LINE#         316
+  C:0FD4H         LINE#         317
+  C:0FD8H         LINE#         318
+  C:0FDAH         LINE#         319
+  C:0FDDH         LINE#         320
+  C:0FE3H         LINE#         321
+  C:0FE5H         LINE#         322
+  C:0FE8H         LINE#         323
+  C:0FEBH         LINE#         324
+  C:0FEDH         LINE#         325
   -------         ENDPROC       I2C_RECVBYTE
   -------         PROC          _SINGLE_WRITEI2C
   D:0003H         SYMBOL        REG_Address
   D:0004H         SYMBOL        REG_data
-  C:0FBBH         LINE#         321
-  C:0FBFH         LINE#         322
-  C:0FBFH         LINE#         323
-  C:0FC2H         LINE#         324
-  C:0FC7H         LINE#         325
-  C:0FCCH         LINE#         326
-  C:0FD1H         LINE#         327
+  C:103CH         LINE#         328
+  C:1040H         LINE#         329
+  C:1040H         LINE#         330
+  C:1043H         LINE#         331
+  C:1048H         LINE#         332
+  C:104DH         LINE#         333
+  C:1052H         LINE#         334
   -------         ENDPROC       _SINGLE_WRITEI2C
   -------         PROC          _SINGLE_READI2C
   D:0004H         SYMBOL        REG_Address
   -------         DO            
   D:0006H         SYMBOL        REG_data
   -------         ENDDO         
-  C:0F94H         LINE#         331
-  C:0F96H         LINE#         332
-  C:0F96H         LINE#         334
-  C:0F99H         LINE#         335
-  C:0F9EH         LINE#         336
-  C:0FA3H         LINE#         337
-  C:0FA6H         LINE#         338
-  C:0FABH         LINE#         339
-  C:0FB0H         LINE#         340
-  C:0FB5H         LINE#         341
-  C:0FB8H         LINE#         342
-  C:0FBAH         LINE#         343
+  C:1015H         LINE#         338
+  C:1017H         LINE#         339
+  C:1017H         LINE#         341
+  C:101AH         LINE#         342
+  C:101FH         LINE#         343
+  C:1024H         LINE#         344
+  C:1027H         LINE#         345
+  C:102CH         LINE#         346
+  C:1031H         LINE#         347
+  C:1036H         LINE#         348
+  C:1039H         LINE#         349
+  C:103BH         LINE#         350
   -------         ENDPROC       _SINGLE_READI2C
   -------         PROC          _GETDATA
   D:0003H         SYMBOL        REG_Address
@@ -528,35 +535,35 @@ SYMBOL TABLE OF MODULE:  .\Objects\mpu6050-Test (MAIN)
   D:0002H         SYMBOL        H
   D:0005H         SYMBOL        L
   -------         ENDDO         
-  C:0003H         LINE#         346
-  C:0005H         LINE#         347
-  C:0005H         LINE#         349
-  C:000AH         LINE#         350
-  C:0012H         LINE#         351
-  C:001CH         LINE#         352
+  C:0003H         LINE#         353
+  C:0005H         LINE#         354
+  C:0005H         LINE#         356
+  C:000AH         LINE#         357
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/31/2020  07:55:37  PAGE 10
+
+
+  C:0012H         LINE#         358
+  C:001CH         LINE#         359
   -------         ENDPROC       _GETDATA
-  C:0EE1H         SYMBOL        L?0099
-  -------         PROC          L?0098
-  -------         ENDPROC       L?0098
-  C:0EE1H         SYMBOL        L?0099
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/30/2020  22:25:52  PAGE 10
-
-
+  C:0F62H         SYMBOL        L?0103
+  -------         PROC          L?0102
+  -------         ENDPROC       L?0102
+  C:0F62H         SYMBOL        L?0103
   -------         PROC          _GET_GYRO_DATA
   D:0007H         SYMBOL        gyro_id
-  C:0EE7H         LINE#         355
-  C:0EE7H         LINE#         356
-  C:0EE7H         LINE#         357
-  C:0EFCH         LINE#         358
-  C:0EFCH         LINE#         359
-  C:0F00H         LINE#         360
-  C:0F04H         LINE#         361
-  C:0F08H         LINE#         362
-  C:0F0CH         LINE#         363
-  C:0F10H         LINE#         364
-  C:0F15H         LINE#         365
-  C:0F15H         LINE#         366
-  C:0F18H         LINE#         367
+  C:0F68H         LINE#         362
+  C:0F68H         LINE#         363
+  C:0F68H         LINE#         364
+  C:0F7DH         LINE#         365
+  C:0F7DH         LINE#         366
+  C:0F81H         LINE#         367
+  C:0F85H         LINE#         368
+  C:0F89H         LINE#         369
+  C:0F8DH         LINE#         370
+  C:0F91H         LINE#         371
+  C:0F96H         LINE#         372
+  C:0F96H         LINE#         373
+  C:0F99H         LINE#         374
   -------         ENDPROC       _GET_GYRO_DATA
   -------         PROC          _MPU6050_GET_ANGLE
   D:0008H         SYMBOL        x
@@ -567,48 +574,45 @@ SYMBOL TABLE OF MODULE:  .\Objects\mpu6050-Test (MAIN)
   X:0000H         SYMBOL        temp
   X:0004H         SYMBOL        res
   -------         ENDDO         
-  C:05FBH         LINE#         370
-  C:0607H         LINE#         371
-  C:0607H         LINE#         373
-  C:0611H         LINE#         374
-  C:0626H         LINE#         375
-  C:0626H         LINE#         376
-  C:0626H         LINE#         377
-  C:06A2H         LINE#         378
-  C:06A2H         LINE#         379
-  C:06A5H         LINE#         380
-  C:06A5H         LINE#         381
-  C:0719H         LINE#         382
-  C:0719H         LINE#         383
-  C:071BH         LINE#         384
-  C:071BH         LINE#         385
-  C:0798H         LINE#         386
-  C:07AFH         LINE#         387
-  C:07AFH         LINE#         388
-  C:07AFH         LINE#         389
+  C:05FBH         LINE#         377
+  C:0607H         LINE#         378
+  C:0607H         LINE#         380
+  C:0611H         LINE#         381
+  C:0626H         LINE#         382
+  C:0626H         LINE#         383
+  C:0626H         LINE#         384
+  C:06A2H         LINE#         385
+  C:06A2H         LINE#         386
+  C:06A5H         LINE#         387
+  C:06A5H         LINE#         388
+  C:0719H         LINE#         389
+  C:0719H         LINE#         390
+  C:071BH         LINE#         391
+  C:071BH         LINE#         392
+  C:0798H         LINE#         393
+  C:07AFH         LINE#         394
+  C:07AFH         LINE#         395
+  C:07AFH         LINE#         396
   -------         ENDPROC       _MPU6050_GET_ANGLE
-  C:0CBBH         SYMBOL        L?0101
-  -------         PROC          L?0100
-  -------         ENDPROC       L?0100
-  C:0CBBH         SYMBOL        L?0101
   -------         PROC          _MPU6050_GET_DATA
   D:0006H         SYMBOL        angle_id
-  C:0CBFH         LINE#         393
-  C:0CBFH         LINE#         394
-  C:0CBFH         LINE#         395
-  C:0CDDH         LINE#         396
-  C:0CDDH         LINE#         397
-  C:0CF7H         LINE#         398
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/30/2020  22:25:52  PAGE 11
+  C:0C49H         LINE#         400
+  C:0C49H         LINE#         401
+  C:0C49H         LINE#         402
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/31/2020  07:55:37  PAGE 11
 
 
-  C:0D11H         LINE#         399
-  C:0D34H         LINE#         400
-  C:0D38H         LINE#         401
-  C:0D3CH         LINE#         402
-  C:0D60H         LINE#         403
-  C:0D60H         LINE#         404
-  C:0D63H         LINE#         405
+  C:0C7CH         LINE#         403
+  C:0C7CH         LINE#         404
+  C:0C96H         LINE#         405
+  C:0CB0H         LINE#         406
+  C:0CD3H         LINE#         407
+  C:0CD7H         LINE#         408
+  C:0CDBH         LINE#         409
+  C:0CFBH         LINE#         410
+  C:0D2AH         LINE#         411
+  C:0D2AH         LINE#         412
+  C:0D2DH         LINE#         413
   -------         ENDPROC       _MPU6050_GET_DATA
   -------         PROC          _SERIAL_ONE_SEND_NUMBER
   D:000DH         SYMBOL        num
@@ -616,82 +620,82 @@ SYMBOL TABLE OF MODULE:  .\Objects\mpu6050-Test (MAIN)
   D:0011H         SYMBOL        dat
   D:0015H         SYMBOL        length
   -------         ENDDO         
-  C:0B25H         LINE#         408
-  C:0B2DH         LINE#         409
-  C:0B2DH         LINE#         410
-  C:0B36H         LINE#         411
-  C:0B38H         LINE#         412
-  C:0B3CH         LINE#         413
-  C:0B3CH         LINE#         414
-  C:0B41H         LINE#         415
-  C:0B54H         LINE#         416
-  C:0B54H         LINE#         418
-  C:0B62H         LINE#         419
-  C:0B67H         LINE#         421
-  C:0B67H         LINE#         422
-  C:0B75H         LINE#         423
-  C:0B75H         LINE#         424
-  C:0B8EH         LINE#         425
-  C:0BB9H         LINE#         426
-  C:0BD2H         LINE#         427
-  C:0BD4H         LINE#         428
-  C:0BD6H         LINE#         430
-  C:0BDDH         LINE#         431
-  C:0BDDH         LINE#         432
-  C:0BF5H         LINE#         433
-  C:0C0EH         LINE#         434
-  C:0C10H         LINE#         435
-  C:0C10H         LINE#         436
+  C:0B5DH         LINE#         416
+  C:0B65H         LINE#         417
+  C:0B65H         LINE#         418
+  C:0B6EH         LINE#         419
+  C:0B70H         LINE#         420
+  C:0B74H         LINE#         421
+  C:0B74H         LINE#         422
+  C:0B79H         LINE#         423
+  C:0B8CH         LINE#         424
+  C:0B8CH         LINE#         426
+  C:0B9AH         LINE#         427
+  C:0B9FH         LINE#         429
+  C:0B9FH         LINE#         430
+  C:0BADH         LINE#         431
+  C:0BADH         LINE#         432
+  C:0BC6H         LINE#         433
+  C:0BF1H         LINE#         434
+  C:0C0AH         LINE#         435
+  C:0C0CH         LINE#         436
+  C:0C0EH         LINE#         438
+  C:0C15H         LINE#         439
+  C:0C15H         LINE#         440
+  C:0C2DH         LINE#         441
+  C:0C46H         LINE#         442
+  C:0C48H         LINE#         443
+  C:0C48H         LINE#         444
   -------         ENDPROC       _SERIAL_ONE_SEND_NUMBER
-  C:0A36H         SYMBOL        L?0093
-  C:0A3AH         SYMBOL        L?0094
-  C:0A3DH         SYMBOL        L?0095
-  -------         PROC          L?0092
-  -------         ENDPROC       L?0092
-  C:0A36H         SYMBOL        L?0093
-  C:0A3AH         SYMBOL        L?0094
-  C:0A3DH         SYMBOL        L?0095
+  C:0A6EH         SYMBOL        L?0097
+  C:0A72H         SYMBOL        L?0098
+  C:0A75H         SYMBOL        L?0099
+  -------         PROC          L?0096
+  -------         ENDPROC       L?0096
+  C:0A6EH         SYMBOL        L?0097
+  C:0A72H         SYMBOL        L?0098
+  C:0A75H         SYMBOL        L?0099
   -------         PROC          _SERIAL_ONE_SEND_FLOAT
   D:0008H         SYMBOL        float_val
   D:000CH         SYMBOL        bit_val
   -------         DO            
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/31/2020  07:55:37  PAGE 12
+
+
   X:0000H         SYMBOL        value_int
   X:0004H         SYMBOL        value_flt
   -------         ENDDO         
-  C:0A4BH         LINE#         439
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/30/2020  22:25:52  PAGE 12
-
-
-  C:0A53H         LINE#         440
-  C:0A53H         LINE#         441
-  C:0A5DH         LINE#         442
-  C:0A67H         LINE#         444
-  C:0A79H         LINE#         445
-  C:0A79H         LINE#         446
-  C:0A7EH         LINE#         447
-  C:0A91H         LINE#         448
-  C:0A91H         LINE#         450
-  C:0AA2H         LINE#         452
-  C:0ADFH         LINE#         454
-  C:0AE3H         LINE#         455
-  C:0B01H         LINE#         457
-  C:0B12H         LINE#         458
-  C:0B17H         LINE#         459
+  C:0A83H         LINE#         447
+  C:0A8BH         LINE#         448
+  C:0A8BH         LINE#         449
+  C:0A95H         LINE#         450
+  C:0A9FH         LINE#         452
+  C:0AB1H         LINE#         453
+  C:0AB1H         LINE#         454
+  C:0AB6H         LINE#         455
+  C:0AC9H         LINE#         456
+  C:0AC9H         LINE#         458
+  C:0ADAH         LINE#         460
+  C:0B17H         LINE#         462
+  C:0B1BH         LINE#         463
+  C:0B39H         LINE#         465
+  C:0B4AH         LINE#         466
+  C:0B4FH         LINE#         467
   -------         ENDPROC       _SERIAL_ONE_SEND_FLOAT
   -------         PROC          UART
-  C:0FD4H         LINE#         464
-  C:0FD6H         LINE#         466
-  C:0FD9H         LINE#         467
-  C:0FD9H         LINE#         468
-  C:0FDBH         LINE#         469
-  C:0FDEH         LINE#         470
-  C:0FE2H         LINE#         471
-  C:0FE2H         LINE#         472
-  C:0FE5H         LINE#         473
-  C:0FE5H         LINE#         474
-  C:0FE7H         LINE#         475
-  C:0FE9H         LINE#         476
-  C:0FE9H         LINE#         477
+  C:1055H         LINE#         472
+  C:1057H         LINE#         474
+  C:105AH         LINE#         475
+  C:105AH         LINE#         476
+  C:105CH         LINE#         477
+  C:105FH         LINE#         478
+  C:1063H         LINE#         479
+  C:1063H         LINE#         480
+  C:1066H         LINE#         481
+  C:1066H         LINE#         482
+  C:1068H         LINE#         483
+  C:106AH         LINE#         484
+  C:106AH         LINE#         485
   -------         ENDPROC       UART
   -------         ENDMOD        MAIN
 
@@ -715,13 +719,13 @@ SYMBOL TABLE OF MODULE:  .\Objects\mpu6050-Test (MAIN)
 
   -------         MODULE        ?C?FPNEG
   C:033DH         PUBLIC        ?C?FPNEG
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/31/2020  07:55:37  PAGE 13
+
+
   -------         ENDMOD        ?C?FPNEG
 
   -------         MODULE        ?C?FCAST
   C:0358H         PUBLIC        ?C?FCASTC
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/30/2020  22:25:52  PAGE 13
-
-
   C:0353H         PUBLIC        ?C?FCASTI
   C:034EH         PUBLIC        ?C?FCASTL
   -------         ENDMOD        ?C?FCAST
@@ -731,11 +735,11 @@ SYMBOL TABLE OF MODULE:  .\Objects\mpu6050-Test (MAIN)
   -------         ENDMOD        ?C?CASTF
 
   -------         MODULE        SQRT
-  C:0C15H         PUBLIC        _SQRT
+  C:0D32H         PUBLIC        _SQRT
   -------         ENDMOD        SQRT
 
   -------         MODULE        ATAN
-  C:092EH         PUBLIC        _ATAN
+  C:0966H         PUBLIC        _ATAN
   -------         ENDMOD        ATAN
 
   -------         MODULE        ?C?CLDPTR
@@ -747,7 +751,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\mpu6050-Test (MAIN)
   -------         ENDMOD        ?C?LMUL
 
   -------         MODULE        ?C?SLDIV
-  C:0E62H         PUBLIC        ?C?SLDIV
+  C:0EE3H         PUBLIC        ?C?SLDIV
   -------         ENDMOD        ?C?SLDIV
 
   -------         MODULE        ?C?LNEG
@@ -774,5 +778,8 @@ SYMBOL TABLE OF MODULE:  .\Objects\mpu6050-Test (MAIN)
   C:0569H         PUBLIC        ?C?ULDIV
   -------         ENDMOD        ?C?ULDIV
 
-Program Size: data=27.3 xdata=8 code=4176
+Program Size: data=27.3 xdata=8 code=4305
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/31/2020  07:55:37  PAGE 14
+
+
 LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

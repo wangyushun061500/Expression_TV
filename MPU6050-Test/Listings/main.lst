@@ -1,4 +1,4 @@
-C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 22:25:52 PAGE 1   
+C51 COMPILER V9.59.0.0   MAIN                                                              07/31/2020 07:55:37 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MAIN
@@ -62,7 +62,7 @@ line level    source
   52          // 变量声明
   53          
   54          bit busy;
-C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 22:25:52 PAGE 2   
+C51 COMPILER V9.59.0.0   MAIN                                                              07/31/2020 07:55:37 PAGE 2   
 
   55          float value = 0;
   56          
@@ -126,7 +126,7 @@ line level    source
  114   2          SendString("\r\n");               //换行
  115   2          
  116   2          value = MPU6050_Get_Data(4);          //获取与x轴加速度，数值被放大100倍
-C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 22:25:52 PAGE 3   
+C51 COMPILER V9.59.0.0   MAIN                                                              07/31/2020 07:55:37 PAGE 3   
 
  117   2          SendString("x轴加速度：");
  118   2          Delay5us();
@@ -134,384 +134,392 @@ line level    source
  120   2          Delay5us();
  121   2          SendString("\r\n");               //换行
  122   2          
- 123   2          value = MPU6050_Get_Data(4);          //获取与y轴加速度，数值被放大100倍
+ 123   2          value = MPU6050_Get_Data(5);          //获取与y轴加速度，数值被放大100倍
  124   2          SendString("y轴加速度：");
  125   2          Delay5us();
  126   2          serial_one_send_float(value / 100,1);     //角度除以100，并从串口发出
  127   2          Delay5us();
  128   2          SendString("\r\n");               //换行
  129   2          
- 130   2          value = MPU6050_Get_Data(4);          //获取与z轴加速度，数值被放大100倍
+ 130   2          value = MPU6050_Get_Data(6);          //获取与z轴加速度，数值被放大100倍
  131   2          SendString("z轴加速度：");
  132   2          Delay5us();
  133   2          serial_one_send_float(value / 100,1);     //角度除以100，并从串口发出
  134   2          Delay5us();
  135   2          SendString("\r\n");               //换行
- 136   2          SendString("\r\n");               //换行
- 137   2          Delay1000ms();
- 138   2        }
- 139   1        
- 140   1      
- 141   1      }
- 142          
- 143          /*mpu6050初始化函数*/
- 144          void mpu6050_init ()
- 145          {
- 146   1        // 配置IO输出模式
- 147   1        P2M0 = 0x01;
- 148   1        P2M1 = 0x00;
- 149   1        //配置电源电平
- 150   1        Vcc = 1;
- 151   1        Gnd = 0;
- 152   1        //配置mpu6050地址，ad0为设置最低位地址设置
- 153   1        Int = 0;
- 154   1        //初始化寄存器
- 155   1        Delay1000ms();
- 156   1        Single_WriteI2C(PWR_MGMT_1, 0x00);  //解除休眠状态
- 157   1        Single_WriteI2C(SMPLRT_DIV, 0x07);
- 158   1        Single_WriteI2C(CONFIG, 0x06);
- 159   1        Single_WriteI2C(GYRO_CONFIG, 0x18);
- 160   1        Single_WriteI2C(ACCEL_CONFIG, 0x01);
- 161   1        SendString("Init Done!\r\n");
- 162   1      }
- 163          
- 164          /*uart初始化函数*/
- 165          void uart_init ()
- 166          {
- 167   1        ACC = P_SW1;
- 168   1          ACC &= ~(S1_S0 | S1_S1);    //S1_S0=0 S1_S1=0
- 169   1          P_SW1 = ACC;                //(P3.0/RxD, P3.1/TxD)
- 170   1        #if (PARITYBIT == NONE_PARITY)
- 171   1          SCON = 0x50;                //8位可变波特率
- 172   1        #elif (PARITYBIT == ODD_PARITY) || (PARITYBIT == EVEN_PARITY) || (PARITYBIT == MARK_PARITY)
+ 136   2      
+ 137   2          value = MPU6050_Get_Data(7);          //获取与温度
+ 138   2          SendString("当前温度为：");
+ 139   2          Delay5us();
+ 140   2          serial_one_send_float(value / 100,1);     //角度除以100，并从串口发出
+ 141   2          Delay5us();
+ 142   2          SendString("\r\n");               //换行
+ 143   2          SendString("\r\n");               //换行
+ 144   2          Delay1000ms();
+ 145   2        }
+ 146   1        
+ 147   1      
+ 148   1      }
+ 149          
+ 150          /*mpu6050初始化函数*/
+ 151          void mpu6050_init ()
+ 152          {
+ 153   1        // 配置IO输出模式
+ 154   1        P2M0 = 0x01;
+ 155   1        P2M1 = 0x00;
+ 156   1        //配置电源电平
+ 157   1        Vcc = 1;
+ 158   1        Gnd = 0;
+ 159   1        //配置mpu6050地址，ad0为设置最低位地址设置
+ 160   1        Int = 0;
+ 161   1        //初始化寄存器
+ 162   1        Delay1000ms();
+ 163   1        Single_WriteI2C(PWR_MGMT_1, 0x00);  //解除休眠状态
+ 164   1        Single_WriteI2C(SMPLRT_DIV, 0x07);
+ 165   1        Single_WriteI2C(CONFIG, 0x06);
+ 166   1        Single_WriteI2C(GYRO_CONFIG, 0x18);
+ 167   1        Single_WriteI2C(ACCEL_CONFIG, 0x01);
+ 168   1        SendString("Init Done!\r\n");
+ 169   1      }
+ 170          
+ 171          /*uart初始化函数*/
+ 172          void uart_init ()
+ 173          {
+ 174   1        ACC = P_SW1;
+ 175   1          ACC &= ~(S1_S0 | S1_S1);    //S1_S0=0 S1_S1=0
+ 176   1          P_SW1 = ACC;                //(P3.0/RxD, P3.1/TxD)
+ 177   1        #if (PARITYBIT == NONE_PARITY)
+ 178   1          SCON = 0x50;                //8位可变波特率
+C51 COMPILER V9.59.0.0   MAIN                                                              07/31/2020 07:55:37 PAGE 4   
+
+ 179   1        #elif (PARITYBIT == ODD_PARITY) || (PARITYBIT == EVEN_PARITY) || (PARITYBIT == MARK_PARITY)
                   SCON = 0xda;                //9位可变波特率,校验位初始为1
                 #elif (PARITYBIT == SPACE_PARITY)
                   SCON = 0xd2;                //9位可变波特率,校验位初始为0
                 #endif
- 177   1      }
- 178          
-C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 22:25:52 PAGE 4   
-
- 179          /*延时5us函数*/
- 180          void Delay5us()   //@24.000MHz
- 181          {
- 182   1        unsigned char i;
- 183   1      
- 184   1        _nop_();
- 185   1        _nop_();
- 186   1        i = 27;
- 187   1        while (--i);
- 188   1      }
- 189          
- 190          /*延时1s函数*/
- 191          void Delay1000ms()    //@24.000MHz
- 192          {
- 193   1        unsigned char i, j, k;
- 194   1      
- 195   1        _nop_();
- 196   1        _nop_();
- 197   1        i = 92;
- 198   1        j = 50;
- 199   1        k = 238;
- 200   1        do
- 201   1        {
- 202   2          do
- 203   2          {
- 204   3            while (--k);
- 205   3          } while (--j);
- 206   2        } while (--i);
- 207   1      }
- 208          
- 209          /*串口数据发送*/
- 210          void SendData(unsigned char dat)
- 211          {
- 212   1          while (busy);               //等待前面的数据发送完成
- 213   1          ACC = dat;                  //获取校验位P (PSW.0)
- 214   1          if (P)                      //根据P来设置校验位
- 215   1          {
- 216   2          #if (PARITYBIT == ODD_PARITY)
+ 184   1      }
+ 185          
+ 186          /*延时5us函数*/
+ 187          void Delay5us()   //@24.000MHz
+ 188          {
+ 189   1        unsigned char i;
+ 190   1      
+ 191   1        _nop_();
+ 192   1        _nop_();
+ 193   1        i = 27;
+ 194   1        while (--i);
+ 195   1      }
+ 196          
+ 197          /*延时1s函数*/
+ 198          void Delay1000ms()    //@24.000MHz
+ 199          {
+ 200   1        unsigned char i, j, k;
+ 201   1      
+ 202   1        _nop_();
+ 203   1        _nop_();
+ 204   1        i = 92;
+ 205   1        j = 50;
+ 206   1        k = 238;
+ 207   1        do
+ 208   1        {
+ 209   2          do
+ 210   2          {
+ 211   3            while (--k);
+ 212   3          } while (--j);
+ 213   2        } while (--i);
+ 214   1      }
+ 215          
+ 216          /*串口数据发送*/
+ 217          void SendData(unsigned char dat)
+ 218          {
+ 219   1          while (busy);               //等待前面的数据发送完成
+ 220   1          ACC = dat;                  //获取校验位P (PSW.0)
+ 221   1          if (P)                      //根据P来设置校验位
+ 222   1          {
+ 223   2          #if (PARITYBIT == ODD_PARITY)
                     TB8 = 0;                //设置校验位为0
                   #elif (PARITYBIT == EVEN_PARITY)
                     TB8 = 1;                //设置校验位为1
                   #endif
- 221   2          }
- 222   1          else
- 223   1          {
- 224   2          #if (PARITYBIT == ODD_PARITY)
+ 228   2          }
+ 229   1          else
+ 230   1          {
+ 231   2          #if (PARITYBIT == ODD_PARITY)
                         TB8 = 1;                //设置校验位为1
                   #elif (PARITYBIT == EVEN_PARITY)
                         TB8 = 0;                //设置校验位为0
                   #endif
- 229   2          }
- 230   1          busy = 1;
- 231   1          SBUF = ACC;                 //写数据到UART数据寄存器
- 232   1      }
- 233          
- 234          /*发送字符串*/
- 235          void SendString(char *s)
- 236          {
- 237   1          while (*s)                  //检测字符串结束标志
- 238   1          {
- 239   2              SendData(*s++);         //发送当前字符
- 240   2          }
-C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 22:25:52 PAGE 5   
+ 236   2          }
+ 237   1          busy = 1;
+ 238   1          SBUF = ACC;                 //写数据到UART数据寄存器
+ 239   1      }
+ 240          
+C51 COMPILER V9.59.0.0   MAIN                                                              07/31/2020 07:55:37 PAGE 5   
 
- 241   1      }
- 242          
- 243          /*I2C开始信号*/
- 244          void I2C_Start()
- 245          {
- 246   1          Sda = 1;                    //拉高数据线
- 247   1          Scl = 1;                    //拉高时钟线
- 248   1          Delay5us();                 //延时
- 249   1          Sda = 0;                    //产生下降沿
- 250   1          Delay5us();                 //延时
- 251   1          Scl = 0;                    //拉低时钟线
- 252   1      }
- 253          
- 254          /*I2C停止信号*/
- 255          void I2C_Stop()
- 256          {
- 257   1          Sda = 0;                    //拉低数据线
- 258   1          Scl = 1;                    //拉高时钟线
- 259   1          Delay5us();                 //延时
- 260   1          Sda = 1;                    //产生上升沿
- 261   1          Delay5us();                 //延时
- 262   1      }
- 263          
- 264          /*I2C发送应答信号*/
- 265          void I2C_SendACK(bit ack)
- 266          {
- 267   1          Sda = ack;                  //写应答信号
- 268   1          Scl = 1;                    //拉高时钟线
- 269   1          Delay5us();                 //延时
- 270   1          Scl = 0;                    //拉低时钟线
- 271   1          Delay5us();                 //延时
- 272   1      }
- 273          
- 274          /*I2C接收应答信号*/
- 275          bit I2C_RecvACK()
- 276          {
- 277   1        bit ack;
- 278   1          Scl = 1;                    //拉高时钟线
- 279   1          Delay5us();                 //延时
- 280   1          ack = Sda;                   //读应答信号
- 281   1          Scl = 0;                    //拉低时钟线
- 282   1          Delay5us();                 //延时
- 283   1          return ack;
- 284   1      }
- 285          
- 286          /*I2C发送一个字节数据*/
- 287          void I2C_SendByte(unsigned char dat)
- 288          {
- 289   1          unsigned char i;
- 290   1          for (i=0; i<8; i++)         //8位计数器
- 291   1          {
- 292   2              dat = dat << 1;         //移出数据的最高位
- 293   2              Sda = CY;               //送数据口
- 294   2              Scl = 1;                //拉高时钟线
- 295   2              Delay5us();             //延时
- 296   2              Scl = 0;                //拉低时钟线
- 297   2              Delay5us();             //延时
- 298   2          }
- 299   1           while(I2C_RecvACK());
- 300   1      }
- 301          
- 302          /*I2C接收一个字节数据*/
-C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 22:25:52 PAGE 6   
+ 241          /*发送字符串*/
+ 242          void SendString(char *s)
+ 243          {
+ 244   1          while (*s)                  //检测字符串结束标志
+ 245   1          {
+ 246   2              SendData(*s++);         //发送当前字符
+ 247   2          }
+ 248   1      }
+ 249          
+ 250          /*I2C开始信号*/
+ 251          void I2C_Start()
+ 252          {
+ 253   1          Sda = 1;                    //拉高数据线
+ 254   1          Scl = 1;                    //拉高时钟线
+ 255   1          Delay5us();                 //延时
+ 256   1          Sda = 0;                    //产生下降沿
+ 257   1          Delay5us();                 //延时
+ 258   1          Scl = 0;                    //拉低时钟线
+ 259   1      }
+ 260          
+ 261          /*I2C停止信号*/
+ 262          void I2C_Stop()
+ 263          {
+ 264   1          Sda = 0;                    //拉低数据线
+ 265   1          Scl = 1;                    //拉高时钟线
+ 266   1          Delay5us();                 //延时
+ 267   1          Sda = 1;                    //产生上升沿
+ 268   1          Delay5us();                 //延时
+ 269   1      }
+ 270          
+ 271          /*I2C发送应答信号*/
+ 272          void I2C_SendACK(bit ack)
+ 273          {
+ 274   1          Sda = ack;                  //写应答信号
+ 275   1          Scl = 1;                    //拉高时钟线
+ 276   1          Delay5us();                 //延时
+ 277   1          Scl = 0;                    //拉低时钟线
+ 278   1          Delay5us();                 //延时
+ 279   1      }
+ 280          
+ 281          /*I2C接收应答信号*/
+ 282          bit I2C_RecvACK()
+ 283          {
+ 284   1        bit ack;
+ 285   1          Scl = 1;                    //拉高时钟线
+ 286   1          Delay5us();                 //延时
+ 287   1          ack = Sda;                   //读应答信号
+ 288   1          Scl = 0;                    //拉低时钟线
+ 289   1          Delay5us();                 //延时
+ 290   1          return ack;
+ 291   1      }
+ 292          
+ 293          /*I2C发送一个字节数据*/
+ 294          void I2C_SendByte(unsigned char dat)
+ 295          {
+ 296   1          unsigned char i;
+ 297   1          for (i=0; i<8; i++)         //8位计数器
+ 298   1          {
+ 299   2              dat = dat << 1;         //移出数据的最高位
+ 300   2              Sda = CY;               //送数据口
+ 301   2              Scl = 1;                //拉高时钟线
+ 302   2              Delay5us();             //延时
+C51 COMPILER V9.59.0.0   MAIN                                                              07/31/2020 07:55:37 PAGE 6   
 
- 303          unsigned char I2C_RecvByte()
- 304          {
- 305   1          unsigned char i;
- 306   1          unsigned char dat = 0;
- 307   1          Sda = 1;                    //使能内部上拉,准备读取数据,
- 308   1          for (i=0; i<8; i++)         //8位计数器
- 309   1          {
- 310   2              dat = dat << 1;
- 311   2              Scl = 1;                //拉高时钟线
- 312   2              Delay5us();             //延时
- 313   2              dat |= Sda;             //读数据               
- 314   2              Scl = 0;                //拉低时钟线
- 315   2              Delay5us();             //延时
- 316   2          }
- 317   1          return dat;
- 318   1      }
- 319          
- 320          /*I2C写入一个字节数据*/
- 321          void Single_WriteI2C(unsigned char REG_Address,unsigned char REG_data)
- 322          {
- 323   1          I2C_Start();                  //起始信号
- 324   1          I2C_SendByte(SlaveAddress);   //发送设备地址+写信号
- 325   1          I2C_SendByte(REG_Address);    //内部寄存器地址，
- 326   1          I2C_SendByte(REG_data);       //内部寄存器数据，
- 327   1          I2C_Stop();                   //发送停止信号
- 328   1      }
- 329          
- 330          /*从I2C设备读取一个字节数据*/
- 331          unsigned char Single_ReadI2C(unsigned char REG_Address)
- 332          {
- 333   1        unsigned char REG_data;
- 334   1        I2C_Start();                   //起始信号
- 335   1        I2C_SendByte(SlaveAddress);    //发送设备地址+写信号
- 336   1        I2C_SendByte(REG_Address);     //发送存储单元地址，从0开始  
- 337   1        I2C_Start();                   //起始信号
- 338   1        I2C_SendByte(SlaveAddress+1);  //发送设备地址+读信号
- 339   1        REG_data=I2C_RecvByte();       //读出寄存器数据
- 340   1        I2C_SendACK(1);                //接收应答信号
- 341   1        I2C_Stop();                    //停止信号
- 342   1        return REG_data;
- 343   1      }
- 344          
- 345          /*数据融合算法*/
- 346          int GetData(unsigned char REG_Address)
- 347          {
- 348   1        unsigned char H,L;
- 349   1        H=Single_ReadI2C(REG_Address);
- 350   1        L=Single_ReadI2C(REG_Address+1);
- 351   1        return (H<<8)+L;   //合成数据
- 352   1      }
- 353          
- 354          /*获取角速度或者加速度*/
- 355          int Get_Gyro_Data(unsigned char gyro_id)
- 356          {
- 357   1        switch(gyro_id)
- 358   1        {
- 359   2          case 1: return GetData(ACCEL_XOUT_H); break;
- 360   2          case 2: return GetData(ACCEL_YOUT_H); break;
- 361   2          case 3: return GetData(ACCEL_ZOUT_H); break;
- 362   2          case 4: return GetData(GYRO_XOUT_H) ; break;
- 363   2          case 5: return GetData(GYRO_YOUT_H) ; break;
- 364   2          case 6: return GetData(GYRO_ZOUT_H) ; break;
-C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 22:25:52 PAGE 7   
+ 303   2              Scl = 0;                //拉低时钟线
+ 304   2              Delay5us();             //延时
+ 305   2          }
+ 306   1           while(I2C_RecvACK());
+ 307   1      }
+ 308          
+ 309          /*I2C接收一个字节数据*/
+ 310          unsigned char I2C_RecvByte()
+ 311          {
+ 312   1          unsigned char i;
+ 313   1          unsigned char dat = 0;
+ 314   1          Sda = 1;                    //使能内部上拉,准备读取数据,
+ 315   1          for (i=0; i<8; i++)         //8位计数器
+ 316   1          {
+ 317   2              dat = dat << 1;
+ 318   2              Scl = 1;                //拉高时钟线
+ 319   2              Delay5us();             //延时
+ 320   2              dat |= Sda;             //读数据               
+ 321   2              Scl = 0;                //拉低时钟线
+ 322   2              Delay5us();             //延时
+ 323   2          }
+ 324   1          return dat;
+ 325   1      }
+ 326          
+ 327          /*I2C写入一个字节数据*/
+ 328          void Single_WriteI2C(unsigned char REG_Address,unsigned char REG_data)
+ 329          {
+ 330   1          I2C_Start();                  //起始信号
+ 331   1          I2C_SendByte(SlaveAddress);   //发送设备地址+写信号
+ 332   1          I2C_SendByte(REG_Address);    //内部寄存器地址，
+ 333   1          I2C_SendByte(REG_data);       //内部寄存器数据，
+ 334   1          I2C_Stop();                   //发送停止信号
+ 335   1      }
+ 336          
+ 337          /*从I2C设备读取一个字节数据*/
+ 338          unsigned char Single_ReadI2C(unsigned char REG_Address)
+ 339          {
+ 340   1        unsigned char REG_data;
+ 341   1        I2C_Start();                   //起始信号
+ 342   1        I2C_SendByte(SlaveAddress);    //发送设备地址+写信号
+ 343   1        I2C_SendByte(REG_Address);     //发送存储单元地址，从0开始  
+ 344   1        I2C_Start();                   //起始信号
+ 345   1        I2C_SendByte(SlaveAddress+1);  //发送设备地址+读信号
+ 346   1        REG_data=I2C_RecvByte();       //读出寄存器数据
+ 347   1        I2C_SendACK(1);                //接收应答信号
+ 348   1        I2C_Stop();                    //停止信号
+ 349   1        return REG_data;
+ 350   1      }
+ 351          
+ 352          /*数据融合算法*/
+ 353          int GetData(unsigned char REG_Address)
+ 354          {
+ 355   1        unsigned char H,L;
+ 356   1        H=Single_ReadI2C(REG_Address);
+ 357   1        L=Single_ReadI2C(REG_Address+1);
+ 358   1        return (H<<8)+L;   //合成数据
+ 359   1      }
+ 360          
+ 361          /*获取角速度或者加速度*/
+ 362          int Get_Gyro_Data(unsigned char gyro_id)
+ 363          {
+ 364   1        switch(gyro_id)
+C51 COMPILER V9.59.0.0   MAIN                                                              07/31/2020 07:55:37 PAGE 7   
 
- 365   2        }
- 366   1        return 0;
- 367   1      }
- 368          
- 369          /*转换夹角*/
- 370          int MPU6050_Get_Angle(int x,int y,int z,unsigned char dir)
- 371          {
- 372   1        float xdata temp;
- 373   1        float xdata res = 0;
- 374   1        switch(dir)
- 375   1        {
- 376   2          case 0://与z轴的夹角
- 377   2              temp = sqrt(((float)x*(float)x+(float)y*(float)y))/(float)z;
- 378   2              res  = atan(temp);
- 379   2          break;
- 380   2          case 1://与x轴的夹角
- 381   2              temp = (float)x/sqrt(((float)y*(float)y+(float)z*(float)z));
- 382   2              res  = atan(temp);
- 383   2          break;
- 384   2          case 2://与y轴的夹角
- 385   2              temp = (float)y/sqrt(((float)x*(float)x+(float)z*(float)z));
- 386   2              res  = atan(temp);
- 387   2          break;
- 388   2        }
- 389   1        return (int)(res*1800/3.1416);//弧度转换为角度,扩大10倍
- 390   1      }
- 391          
- 392          /*数值处理*/
- 393          int MPU6050_Get_Data(unsigned angle_id)
- 394          {
- 395   1        switch(angle_id)
- 396   1        {
- 397   2          case 1:return MPU6050_Get_Angle( Get_Gyro_Data(1), Get_Gyro_Data(2), Get_Gyro_Data(3), 1);break;
- 398   2          case 2:return MPU6050_Get_Angle( Get_Gyro_Data(1), Get_Gyro_Data(2), Get_Gyro_Data(3), 2);break;
- 399   2          case 3:return MPU6050_Get_Angle( Get_Gyro_Data(1), Get_Gyro_Data(2), Get_Gyro_Data(3), 0);break;
- 400   2          case 4:return (int)((float)((float)Get_Gyro_Data(4)/16384)*9.8*100);
- 401   2          case 5:return (int)((float)((float)Get_Gyro_Data(5)/16384)*9.8*100);
- 402   2          case 6:return (int)((float)((float)Get_Gyro_Data(6)/16384)*9.8*100);
- 403   2        }
- 404   1        return 0;
- 405   1      }
- 406          
- 407          /*uart发送long数值*/
- 408          void serial_one_send_number(long num)
- 409          {
- 410   1        long dat = 0;
- 411   1        unsigned char  length = 0;
- 412   1        if(num < 0)                   //当数值为负数时
- 413   1        {
- 414   2          SendData('-');  //输出负号
- 415   2          num = -num;                 //将数值取相反数
- 416   2        }
- 417   1        
- 418   1        if(num == 0)                  //当数值为0时
- 419   1          SendData('0');  //输出字符0
- 420   1        else                      //当数值不为0时
+ 365   1        {
+ 366   2          case 1: return GetData(ACCEL_XOUT_H); break;
+ 367   2          case 2: return GetData(ACCEL_YOUT_H); break;
+ 368   2          case 3: return GetData(ACCEL_ZOUT_H); break;
+ 369   2          case 4: return GetData(GYRO_XOUT_H) ; break;
+ 370   2          case 5: return GetData(GYRO_YOUT_H) ; break;
+ 371   2          case 6: return GetData(GYRO_ZOUT_H) ; break;
+ 372   2        }
+ 373   1        return 0;
+ 374   1      }
+ 375          
+ 376          /*转换夹角*/
+ 377          int MPU6050_Get_Angle(int x,int y,int z,unsigned char dir)
+ 378          {
+ 379   1        float xdata temp;
+ 380   1        float xdata res = 0;
+ 381   1        switch(dir)
+ 382   1        {
+ 383   2          case 0://与z轴的夹角
+ 384   2              temp = sqrt(((float)x*(float)x+(float)y*(float)y))/(float)z;
+ 385   2              res  = atan(temp);
+ 386   2          break;
+ 387   2          case 1://与x轴的夹角
+ 388   2              temp = (float)x/sqrt(((float)y*(float)y+(float)z*(float)z));
+ 389   2              res  = atan(temp);
+ 390   2          break;
+ 391   2          case 2://与y轴的夹角
+ 392   2              temp = (float)y/sqrt(((float)x*(float)x+(float)z*(float)z));
+ 393   2              res  = atan(temp);
+ 394   2          break;
+ 395   2        }
+ 396   1        return (int)(res*1800/3.1416);//弧度转换为角度,扩大10倍
+ 397   1      }
+ 398          
+ 399          /*数值处理*/
+ 400          int MPU6050_Get_Data(unsigned angle_id)
+ 401          {
+ 402   1        switch(angle_id)
+ 403   1        {
+ 404   2          case 1:return MPU6050_Get_Angle( Get_Gyro_Data(1), Get_Gyro_Data(2), Get_Gyro_Data(3), 1);break;
+ 405   2          case 2:return MPU6050_Get_Angle( Get_Gyro_Data(1), Get_Gyro_Data(2), Get_Gyro_Data(3), 2);break;
+ 406   2          case 3:return MPU6050_Get_Angle( Get_Gyro_Data(1), Get_Gyro_Data(2), Get_Gyro_Data(3), 0);break;
+ 407   2          case 4:return (int)((float)((float)Get_Gyro_Data(4)/16384)*9.8*100);
+ 408   2          case 5:return (int)((float)((float)Get_Gyro_Data(5)/16384)*9.8*100);
+ 409   2          case 6:return (int)((float)((float)Get_Gyro_Data(6)/16384)*9.8*100);
+ 410   2          case 7:return (int)(((float)((float)GetData(TEMP_OUT_H)/340)+36.53)*100);
+ 411   2        }
+ 412   1        return 0;
+ 413   1      }
+ 414          
+ 415          /*uart发送long数值*/
+ 416          void serial_one_send_number(long num)
+ 417          {
+ 418   1        long dat = 0;
+ 419   1        unsigned char  length = 0;
+ 420   1        if(num < 0)                   //当数值为负数时
  421   1        {
- 422   2          while(num)                  //将数值倒过来
- 423   2          {
- 424   3            dat = dat * 10;
- 425   3            dat = dat + num % 10;
- 426   3            num = num / 10;
-C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 22:25:52 PAGE 8   
+ 422   2          SendData('-');  //输出负号
+ 423   2          num = -num;                 //将数值取相反数
+ 424   2        }
+ 425   1        
+ 426   1        if(num == 0)                  //当数值为0时
+C51 COMPILER V9.59.0.0   MAIN                                                              07/31/2020 07:55:37 PAGE 8   
 
- 427   3            length++;
- 428   3          }
- 429   2          
- 430   2          while(length--)             //从第一位开始输出倒过来的数值
+ 427   1          SendData('0');  //输出字符0
+ 428   1        else                      //当数值不为0时
+ 429   1        {
+ 430   2          while(num)                  //将数值倒过来
  431   2          {
- 432   3            SendData(dat % 10 + '0');
- 433   3            dat = dat / 10;
- 434   3          }
- 435   2        }
- 436   1      }
- 437          
- 438          
- 439          void serial_one_send_float(double float_val, char bit_val)
- 440          {
- 441   1        long xdata value_int = 0;
- 442   1        long xdata value_flt = 0;
- 443   1        
- 444   1        if(float_val < 0)
- 445   1        {
- 446   2          SendData('-');
- 447   2          float_val = -float_val;
- 448   2        }
- 449   1        
- 450   1        value_int = (long)float_val;
+ 432   3            dat = dat * 10;
+ 433   3            dat = dat + num % 10;
+ 434   3            num = num / 10;
+ 435   3            length++;
+ 436   3          }
+ 437   2          
+ 438   2          while(length--)             //从第一位开始输出倒过来的数值
+ 439   2          {
+ 440   3            SendData(dat % 10 + '0');
+ 441   3            dat = dat / 10;
+ 442   3          }
+ 443   2        }
+ 444   1      }
+ 445          
+ 446          
+ 447          void serial_one_send_float(double float_val, char bit_val)
+ 448          {
+ 449   1        long xdata value_int = 0;
+ 450   1        long xdata value_flt = 0;
  451   1        
- 452   1        float_val = float_val - (double)value_int;
- 453   1        
- 454   1        for(;bit_val;bit_val--)
- 455   1          float_val = float_val * 10;
- 456   1        
- 457   1        serial_one_send_number(value_int);
- 458   1        SendData('.');
- 459   1        serial_one_send_number((long)float_val);
- 460   1      }
- 461          
- 462          
- 463          /*uart中断服务程序*/
- 464          void Uart() interrupt 4
- 465          {
- 466   1          if (RI)
- 467   1          {
- 468   2              RI = 0;                 //清除RI位
- 469   2              P0 = SBUF;              //P0显示串口数据
- 470   2              P54 = RB8;              //P2.2显示校验位
- 471   2          }
- 472   1          if (TI)
- 473   1          {
- 474   2              TI = 0;                 //清除TI位
- 475   2              busy = 0;               //清忙标志
- 476   2          }
- 477   1      }
+ 452   1        if(float_val < 0)
+ 453   1        {
+ 454   2          SendData('-');
+ 455   2          float_val = -float_val;
+ 456   2        }
+ 457   1        
+ 458   1        value_int = (long)float_val;
+ 459   1        
+ 460   1        float_val = float_val - (double)value_int;
+ 461   1        
+ 462   1        for(;bit_val;bit_val--)
+ 463   1          float_val = float_val * 10;
+ 464   1        
+ 465   1        serial_one_send_number(value_int);
+ 466   1        SendData('.');
+ 467   1        serial_one_send_number((long)float_val);
+ 468   1      }
+ 469          
+ 470          
+ 471          /*uart中断服务程序*/
+ 472          void Uart() interrupt 4
+ 473          {
+ 474   1          if (RI)
+ 475   1          {
+ 476   2              RI = 0;                 //清除RI位
+ 477   2              P0 = SBUF;              //P0显示串口数据
+ 478   2              P54 = RB8;              //P2.2显示校验位
+ 479   2          }
+ 480   1          if (TI)
+ 481   1          {
+ 482   2              TI = 0;                 //清除TI位
+ 483   2              busy = 0;               //清忙标志
+ 484   2          }
+ 485   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   1882    ----
-   CONSTANT SIZE    =    114    ----
+C51 COMPILER V9.59.0.0   MAIN                                                              07/31/2020 07:55:37 PAGE 9   
+
+   CODE SIZE        =   1998    ----
+   CONSTANT SIZE    =    127    ----
    XDATA SIZE       =   ----      16
    PDATA SIZE       =   ----    ----
    DATA SIZE        =      4      24
    IDATA SIZE       =   ----    ----
    BIT SIZE         =      1       2
 END OF MODULE INFORMATION.
-
-C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 22:25:52 PAGE 9   
 
 
 C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
