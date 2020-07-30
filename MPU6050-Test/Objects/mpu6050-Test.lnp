@@ -1,0 +1,3 @@
+".\Objects\main.obj" 
+TO ".\Objects\mpu6050-Test" 
+PRINT(".\Listings\mpu6050-Test.m51") RAMSIZE(256) 
