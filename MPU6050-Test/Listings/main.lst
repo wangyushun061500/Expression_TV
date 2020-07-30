@@ -1,4 +1,4 @@
-C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 19:44:42 PAGE 1   
+C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 20:23:13 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MAIN
@@ -10,21 +10,155 @@ line level    source
 
    1          #include "15w.h"
    2          
-   3          int main(void)
-   4          {
-   5   1        return 0;
-   6   1      }
+   3          
+   4          // 声明元器件管脚
+   5          
+   6          #define Vcc P20   //电源正极
+   7          #define Gnd P21   //电源负极
+   8          #define Scl P22   //I2C时钟线
+   9          #define Sda P23   //I2C数据线
+  10          #define Xda P24   //外接I2C数据线
+  11          #define Xcl P25   //外接I2C时钟线
+  12          #define Ad0 P26   //I2C地址最低位
+  13          #define Int P27   //中断信号输出
+  14          
+  15          // 声明串口传输设置
+  16          
+  17          #define FOSC 24000000L    //系统频率
+  18          #define BAUD 115200     //波特率
+  19          #define NONE_PARITY     0       //无校验
+  20          #define ODD_PARITY      1       //奇校验
+  21          #define EVEN_PARITY     2       //偶校验
+  22          #define MARK_PARITY     3       //标记校验
+  23          #define SPACE_PARITY    4       //空白校验
+  24          #define PARITYBIT NONE_PARITY   //定义校验位
+  25          #define S1_S0 0x40              //P_SW1.6
+  26          #define S1_S1 0x80              //P_SW1.7
+  27          
+  28          
+  29          // 变量声明
+  30          
+  31          bit busy;
+  32          
+  33          // 提前声明函数
+  34          
+  35          void mpu6050_init();
+  36          void uart_init();
+  37          void SendData(unsigned char dat);
+  38          void SendString(char *s);
+  39          
+  40          int main(void)
+  41          {
+  42   1        mpu6050_init();
+  43   1        uart_init();
+  44   1        T2L = (65536 - (FOSC/4/BAUD));   //设置波特率重装值
+  45   1          T2H = (65536 - (FOSC/4/BAUD))>>8;
+  46   1          AUXR = 0x14;                //T2为1T模式, 并启动定时器2
+  47   1          AUXR |= 0x01;               //选择定时器2为串口1的波特率发生器
+  48   1          ES = 1;                     //使能串口1中断
+  49   1          EA = 1;
+  50   1      
+  51   1        SendString("STC15F2K60S2\r\nUart Test !\r\n");
+  52   1        while (1)
+  53   1        {
+  54   2          
+C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 20:23:13 PAGE 2   
+
+  55   2        }
+  56   1        
+  57   1      
+  58   1        return 0;
+  59   1      }
+  60          
+  61          /*mpu6050初始化函数*/
+  62          void mpu6050_init ()
+  63          {
+  64   1        // 配置IO输出模式
+  65   1        P2M0 = 0x01;
+  66   1        P2M1 = 0x00;
+  67   1        //配置电源电平
+  68   1        Vcc = 1;
+  69   1        Gnd = 0;
+  70   1      }
+  71          
+  72          void uart_init ()
+  73          {
+  74   1        ACC = P_SW1;
+  75   1          ACC &= ~(S1_S0 | S1_S1);    //S1_S0=0 S1_S1=0
+  76   1          P_SW1 = ACC;                //(P3.0/RxD, P3.1/TxD)
+  77   1        #if (PARITYBIT == NONE_PARITY)
+  78   1          SCON = 0x50;                //8位可变波特率
+  79   1        #elif (PARITYBIT == ODD_PARITY) || (PARITYBIT == EVEN_PARITY) || (PARITYBIT == MARK_PARITY)
+                  SCON = 0xda;                //9位可变波特率,校验位初始为1
+                #elif (PARITYBIT == SPACE_PARITY)
+                  SCON = 0xd2;                //9位可变波特率,校验位初始为0
+                #endif
+  84   1      }
+  85          
+  86          /*串口数据发送*/
+  87          void SendData(unsigned char dat)
+  88          {
+  89   1          while (busy);               //等待前面的数据发送完成
+  90   1          ACC = dat;                  //获取校验位P (PSW.0)
+  91   1          if (P)                      //根据P来设置校验位
+  92   1          {
+  93   2          #if (PARITYBIT == ODD_PARITY)
+                    TB8 = 0;                //设置校验位为0
+                  #elif (PARITYBIT == EVEN_PARITY)
+                    TB8 = 1;                //设置校验位为1
+                  #endif
+  98   2          }
+  99   1          else
+ 100   1          {
+ 101   2          #if (PARITYBIT == ODD_PARITY)
+                        TB8 = 1;                //设置校验位为1
+                  #elif (PARITYBIT == EVEN_PARITY)
+                        TB8 = 0;                //设置校验位为0
+                  #endif
+ 106   2          }
+ 107   1          busy = 1;
+ 108   1          SBUF = ACC;                 //写数据到UART数据寄存器
+ 109   1      }
+ 110          
+ 111          /*发送字符串*/
+ 112          void SendString(char *s)
+ 113          {
+ 114   1          while (*s)                  //检测字符串结束标志
+ 115   1          {
+ 116   2              SendData(*s++);         //发送当前字符
+C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 20:23:13 PAGE 3   
+
+ 117   2          }
+ 118   1      }
+ 119          
+ 120          
+ 121          /*uart中断服务程序*/
+ 122          void Uart() interrupt 4
+ 123          {
+ 124   1          if (RI)
+ 125   1          {
+ 126   2              RI = 0;                 //清除RI位
+ 127   2              P0 = SBUF;              //P0显示串口数据
+ 128   2              P54 = RB8;              //P2.2显示校验位
+ 129   2          }
+ 130   1          if (TI)
+ 131   1          {
+ 132   2              TI = 0;                 //清除TI位
+ 133   2              busy = 0;               //清忙标志
+ 134   2          }
+ 135   1      }
+*** WARNING C294 IN LINE 58 OF main.c: unreachable code
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =      4    ----
-   CONSTANT SIZE    =   ----    ----
+   CODE SIZE        =    124    ----
+   CONSTANT SIZE    =     28    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =   ----    ----
+   DATA SIZE        =   ----       3
    IDATA SIZE       =   ----    ----
-   BIT SIZE         =   ----    ----
+   BIT SIZE         =      1    ----
 END OF MODULE INFORMATION.
 
 
-C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)
