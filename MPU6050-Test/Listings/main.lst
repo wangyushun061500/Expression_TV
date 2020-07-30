@@ -1,4 +1,4 @@
-C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 20:23:13 PAGE 1   
+C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 21:49:00 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MAIN
@@ -9,7 +9,7 @@ COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE 
 line level    source
 
    1          #include "15w.h"
-   2          
+   2          #include "INTRINS.H"
    3          
    4          // 声明元器件管脚
    5          
@@ -35,130 +35,316 @@ line level    source
   25          #define S1_S0 0x40              //P_SW1.6
   26          #define S1_S1 0x80              //P_SW1.7
   27          
-  28          
-  29          // 变量声明
-  30          
-  31          bit busy;
-  32          
-  33          // 提前声明函数
-  34          
-  35          void mpu6050_init();
-  36          void uart_init();
-  37          void SendData(unsigned char dat);
-  38          void SendString(char *s);
-  39          
-  40          int main(void)
-  41          {
-  42   1        mpu6050_init();
-  43   1        uart_init();
-  44   1        T2L = (65536 - (FOSC/4/BAUD));   //设置波特率重装值
-  45   1          T2H = (65536 - (FOSC/4/BAUD))>>8;
-  46   1          AUXR = 0x14;                //T2为1T模式, 并启动定时器2
-  47   1          AUXR |= 0x01;               //选择定时器2为串口1的波特率发生器
-  48   1          ES = 1;                     //使能串口1中断
-  49   1          EA = 1;
-  50   1      
-  51   1        SendString("STC15F2K60S2\r\nUart Test !\r\n");
-  52   1        while (1)
-  53   1        {
-  54   2          
-C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 20:23:13 PAGE 2   
+  28          // 声明mpu6050内部地址
+  29          #define SMPLRT_DIV    0x19  //陀螺仪采样率，典型值：0x07(125Hz)
+  30          #define CONFIG      0x1A  //低通滤波频率，典型值：0x06(5Hz)
+  31          #define GYRO_CONFIG   0x1B  //陀螺仪自检及测量范围，典型值：0x18(不自检，2000deg/s)
+  32          #define ACCEL_CONFIG  0x1C  //加速计自检、测量范围及高通滤波频率，典型值：0x01(不自�
+             -��，2G，5Hz)
+  33          #define ACCEL_XOUT_H  0x3B  
+  34          #define ACCEL_XOUT_L  0x3C
+  35          #define ACCEL_YOUT_H  0x3D
+  36          #define ACCEL_YOUT_L  0x3E
+  37          #define ACCEL_ZOUT_H  0x3F
+  38          #define ACCEL_ZOUT_L  0x40
+  39          #define TEMP_OUT_H    0x41
+  40          #define TEMP_OUT_L    0x42
+  41          #define GYRO_XOUT_H   0x43
+  42          #define GYRO_XOUT_L   0x44  
+  43          #define GYRO_YOUT_H   0x45
+  44          #define GYRO_YOUT_L   0x46
+  45          #define GYRO_ZOUT_H   0x47
+  46          #define GYRO_ZOUT_L   0x48
+  47          #define PWR_MGMT_1    0x6B  //电源管理，典型值：0x00(正常启用)
+  48          #define WHO_AM_I    0x75  //IIC地址寄存器(默认数值0x68，只读)
+  49          #define SlaveAddress  0xd0  //IIC写入时的地址字节数据，+1为读取
+  50          
+  51          // 变量声明
+  52          
+  53          bit busy;
+C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 21:49:00 PAGE 2   
 
-  55   2        }
-  56   1        
-  57   1      
-  58   1        return 0;
-  59   1      }
-  60          
-  61          /*mpu6050初始化函数*/
-  62          void mpu6050_init ()
-  63          {
-  64   1        // 配置IO输出模式
-  65   1        P2M0 = 0x01;
-  66   1        P2M1 = 0x00;
-  67   1        //配置电源电平
-  68   1        Vcc = 1;
-  69   1        Gnd = 0;
-  70   1      }
-  71          
-  72          void uart_init ()
-  73          {
-  74   1        ACC = P_SW1;
-  75   1          ACC &= ~(S1_S0 | S1_S1);    //S1_S0=0 S1_S1=0
-  76   1          P_SW1 = ACC;                //(P3.0/RxD, P3.1/TxD)
-  77   1        #if (PARITYBIT == NONE_PARITY)
-  78   1          SCON = 0x50;                //8位可变波特率
-  79   1        #elif (PARITYBIT == ODD_PARITY) || (PARITYBIT == EVEN_PARITY) || (PARITYBIT == MARK_PARITY)
+  54          unsigned char temp;//暂存数据
+  55          
+  56          // 提前声明函数
+  57          
+  58          void mpu6050_init();
+  59          void uart_init();
+  60          void Delay5us();
+  61          void Delay1000ms();
+  62          void SendData(unsigned char dat);
+  63          void SendString(char *s);
+  64          void  I2C_Start();
+  65          void  I2C_Stop();
+  66          void  I2C_SendACK(bit ack);
+  67          bit   I2C_RecvACK();
+  68          void  I2C_SendByte(unsigned char dat);
+  69          unsigned char I2C_RecvByte();
+  70          unsigned char Single_ReadI2C(unsigned char REG_Address);            //读取I2C数据
+  71          void  Single_WriteI2C(unsigned char REG_Address,unsigned char REG_data);    //向I2C写入数据
+  72          
+  73          void main(void)
+  74          {
+  75   1        uart_init();
+  76   1        T2L = (65536 - (FOSC/4/BAUD));   //设置波特率重装值
+  77   1          T2H = (65536 - (FOSC/4/BAUD))>>8;
+  78   1          AUXR = 0x14;                //T2为1T模式, 并启动定时器2
+  79   1          AUXR |= 0x01;               //选择定时器2为串口1的波特率发生器
+  80   1          ES = 1;                     //使能串口1中断
+  81   1          EA = 1;
+  82   1        temp = 0x55;
+  83   1        Delay1000ms();
+  84   1        SendString("STC15F2K60S2\r\nUart ON !\r\n");
+  85   1        mpu6050_init();
+  86   1        while (1)
+  87   1        {
+  88   2          temp = Single_ReadI2C(ACCEL_XOUT_L);
+  89   2          SendData('0' + temp/100);
+  90   2          SendData('0' + temp/10%10);
+  91   2          SendData('0' + temp%10);
+  92   2          SendString("\r\n");
+  93   2          Delay1000ms();
+  94   2        }
+  95   1        
+  96   1      
+  97   1      }
+  98          
+  99          /*mpu6050初始化函数*/
+ 100          void mpu6050_init ()
+ 101          {
+ 102   1        // 配置IO输出模式
+ 103   1        P2M0 = 0x01;
+ 104   1        P2M1 = 0x00;
+ 105   1        //配置电源电平
+ 106   1        Vcc = 1;
+ 107   1        Gnd = 0;
+ 108   1        //配置mpu6050地址，ad0为设置最低位地址设置
+ 109   1        Int = 0;
+ 110   1        //初始化寄存器
+ 111   1        Delay1000ms();
+ 112   1        Single_WriteI2C(PWR_MGMT_1, 0x00);  //解除休眠状态
+ 113   1        Single_WriteI2C(SMPLRT_DIV, 0x07);
+ 114   1        Single_WriteI2C(CONFIG, 0x06);
+ 115   1        Single_WriteI2C(GYRO_CONFIG, 0x18);
+C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 21:49:00 PAGE 3   
+
+ 116   1        Single_WriteI2C(ACCEL_CONFIG, 0x01);
+ 117   1        SendString("Init Done!\r\n");
+ 118   1      }
+ 119          
+ 120          /*uart初始化函数*/
+ 121          void uart_init ()
+ 122          {
+ 123   1        ACC = P_SW1;
+ 124   1          ACC &= ~(S1_S0 | S1_S1);    //S1_S0=0 S1_S1=0
+ 125   1          P_SW1 = ACC;                //(P3.0/RxD, P3.1/TxD)
+ 126   1        #if (PARITYBIT == NONE_PARITY)
+ 127   1          SCON = 0x50;                //8位可变波特率
+ 128   1        #elif (PARITYBIT == ODD_PARITY) || (PARITYBIT == EVEN_PARITY) || (PARITYBIT == MARK_PARITY)
                   SCON = 0xda;                //9位可变波特率,校验位初始为1
                 #elif (PARITYBIT == SPACE_PARITY)
                   SCON = 0xd2;                //9位可变波特率,校验位初始为0
                 #endif
-  84   1      }
-  85          
-  86          /*串口数据发送*/
-  87          void SendData(unsigned char dat)
-  88          {
-  89   1          while (busy);               //等待前面的数据发送完成
-  90   1          ACC = dat;                  //获取校验位P (PSW.0)
-  91   1          if (P)                      //根据P来设置校验位
-  92   1          {
-  93   2          #if (PARITYBIT == ODD_PARITY)
+ 133   1      }
+ 134          
+ 135          /*延时5us函数*/
+ 136          void Delay5us()   //@24.000MHz
+ 137          {
+ 138   1        unsigned char i;
+ 139   1      
+ 140   1        _nop_();
+ 141   1        _nop_();
+ 142   1        i = 27;
+ 143   1        while (--i);
+ 144   1      }
+ 145          
+ 146          /*延时1s函数*/
+ 147          void Delay1000ms()    //@24.000MHz
+ 148          {
+ 149   1        unsigned char i, j, k;
+ 150   1      
+ 151   1        _nop_();
+ 152   1        _nop_();
+ 153   1        i = 92;
+ 154   1        j = 50;
+ 155   1        k = 238;
+ 156   1        do
+ 157   1        {
+ 158   2          do
+ 159   2          {
+ 160   3            while (--k);
+ 161   3          } while (--j);
+ 162   2        } while (--i);
+ 163   1      }
+ 164          
+ 165          /*串口数据发送*/
+ 166          void SendData(unsigned char dat)
+ 167          {
+ 168   1          while (busy);               //等待前面的数据发送完成
+ 169   1          ACC = dat;                  //获取校验位P (PSW.0)
+ 170   1          if (P)                      //根据P来设置校验位
+ 171   1          {
+ 172   2          #if (PARITYBIT == ODD_PARITY)
                     TB8 = 0;                //设置校验位为0
                   #elif (PARITYBIT == EVEN_PARITY)
                     TB8 = 1;                //设置校验位为1
                   #endif
-  98   2          }
-  99   1          else
- 100   1          {
- 101   2          #if (PARITYBIT == ODD_PARITY)
+ 177   2          }
+C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 21:49:00 PAGE 4   
+
+ 178   1          else
+ 179   1          {
+ 180   2          #if (PARITYBIT == ODD_PARITY)
                         TB8 = 1;                //设置校验位为1
                   #elif (PARITYBIT == EVEN_PARITY)
                         TB8 = 0;                //设置校验位为0
                   #endif
- 106   2          }
- 107   1          busy = 1;
- 108   1          SBUF = ACC;                 //写数据到UART数据寄存器
- 109   1      }
- 110          
- 111          /*发送字符串*/
- 112          void SendString(char *s)
- 113          {
- 114   1          while (*s)                  //检测字符串结束标志
- 115   1          {
- 116   2              SendData(*s++);         //发送当前字符
-C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 20:23:13 PAGE 3   
+ 185   2          }
+ 186   1          busy = 1;
+ 187   1          SBUF = ACC;                 //写数据到UART数据寄存器
+ 188   1      }
+ 189          
+ 190          /*发送字符串*/
+ 191          void SendString(char *s)
+ 192          {
+ 193   1          while (*s)                  //检测字符串结束标志
+ 194   1          {
+ 195   2              SendData(*s++);         //发送当前字符
+ 196   2          }
+ 197   1      }
+ 198          
+ 199          /*I2C开始信号*/
+ 200          void I2C_Start()
+ 201          {
+ 202   1          Sda = 1;                    //拉高数据线
+ 203   1          Scl = 1;                    //拉高时钟线
+ 204   1          Delay5us();                 //延时
+ 205   1          Sda = 0;                    //产生下降沿
+ 206   1          Delay5us();                 //延时
+ 207   1          Scl = 0;                    //拉低时钟线
+ 208   1      }
+ 209          
+ 210          /*I2C停止信号*/
+ 211          void I2C_Stop()
+ 212          {
+ 213   1          Sda = 0;                    //拉低数据线
+ 214   1          Scl = 1;                    //拉高时钟线
+ 215   1          Delay5us();                 //延时
+ 216   1          Sda = 1;                    //产生上升沿
+ 217   1          Delay5us();                 //延时
+ 218   1      }
+ 219          
+ 220          /*I2C发送应答信号*/
+ 221          void I2C_SendACK(bit ack)
+ 222          {
+ 223   1          Sda = ack;                  //写应答信号
+ 224   1          Scl = 1;                    //拉高时钟线
+ 225   1          Delay5us();                 //延时
+ 226   1          Scl = 0;                    //拉低时钟线
+ 227   1          Delay5us();                 //延时
+ 228   1      }
+ 229          
+ 230          /*I2C接收应答信号*/
+ 231          bit I2C_RecvACK()
+ 232          {
+ 233   1        bit ack;
+ 234   1          Scl = 1;                    //拉高时钟线
+ 235   1          Delay5us();                 //延时
+ 236   1          ack = Sda;                   //读应答信号
+ 237   1          Scl = 0;                    //拉低时钟线
+ 238   1          Delay5us();                 //延时
+ 239   1          return ack;
+C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 21:49:00 PAGE 5   
 
- 117   2          }
- 118   1      }
- 119          
- 120          
- 121          /*uart中断服务程序*/
- 122          void Uart() interrupt 4
- 123          {
- 124   1          if (RI)
- 125   1          {
- 126   2              RI = 0;                 //清除RI位
- 127   2              P0 = SBUF;              //P0显示串口数据
- 128   2              P54 = RB8;              //P2.2显示校验位
- 129   2          }
- 130   1          if (TI)
- 131   1          {
- 132   2              TI = 0;                 //清除TI位
- 133   2              busy = 0;               //清忙标志
- 134   2          }
- 135   1      }
-*** WARNING C294 IN LINE 58 OF main.c: unreachable code
+ 240   1      }
+ 241          
+ 242          /*I2C发送一个字节数据*/
+ 243          void I2C_SendByte(unsigned char dat)
+ 244          {
+ 245   1          unsigned char i;
+ 246   1          for (i=0; i<8; i++)         //8位计数器
+ 247   1          {
+ 248   2              dat = dat << 1;         //移出数据的最高位
+ 249   2              Sda = CY;               //送数据口
+ 250   2              Scl = 1;                //拉高时钟线
+ 251   2              Delay5us();             //延时
+ 252   2              Scl = 0;                //拉低时钟线
+ 253   2              Delay5us();             //延时
+ 254   2          }
+ 255   1           while(I2C_RecvACK());
+ 256   1      }
+ 257          
+ 258          /*I2C接收一个字节数据*/
+ 259          unsigned char I2C_RecvByte()
+ 260          {
+ 261   1          unsigned char i;
+ 262   1          unsigned char dat = 0;
+ 263   1          Sda = 1;                    //使能内部上拉,准备读取数据,
+ 264   1          for (i=0; i<8; i++)         //8位计数器
+ 265   1          {
+ 266   2              dat = dat << 1;
+ 267   2              Scl = 1;                //拉高时钟线
+ 268   2              Delay5us();             //延时
+ 269   2              dat |= Sda;             //读数据               
+ 270   2              Scl = 0;                //拉低时钟线
+ 271   2              Delay5us();             //延时
+ 272   2          }
+ 273   1          return dat;
+ 274   1      }
+ 275          
+ 276          /*I2C写入一个字节数据*/
+ 277          void Single_WriteI2C(unsigned char REG_Address,unsigned char REG_data)
+ 278          {
+ 279   1          I2C_Start();                  //起始信号
+ 280   1          I2C_SendByte(SlaveAddress);   //发送设备地址+写信号
+ 281   1          I2C_SendByte(REG_Address);    //内部寄存器地址，
+ 282   1          I2C_SendByte(REG_data);       //内部寄存器数据，
+ 283   1          I2C_Stop();                   //发送停止信号
+ 284   1      }
+ 285          
+ 286          /*从I2C设备读取一个字节数据*/
+ 287          unsigned char Single_ReadI2C(unsigned char REG_Address)
+ 288          {
+ 289   1        unsigned char REG_data;
+ 290   1        I2C_Start();                   //起始信号
+ 291   1        I2C_SendByte(SlaveAddress);    //发送设备地址+写信号
+ 292   1        I2C_SendByte(REG_Address);     //发送存储单元地址，从0开始  
+ 293   1        I2C_Start();                   //起始信号
+ 294   1        I2C_SendByte(SlaveAddress+1);  //发送设备地址+读信号
+ 295   1        REG_data=I2C_RecvByte();       //读出寄存器数据
+ 296   1        I2C_SendACK(1);                //接收应答信号
+ 297   1        I2C_Stop();                    //停止信号
+ 298   1        return REG_data;
+ 299   1      }
+ 300          
+ 301          /*uart中断服务程序*/
+C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 21:49:00 PAGE 6   
+
+ 302          void Uart() interrupt 4
+ 303          {
+ 304   1          if (RI)
+ 305   1          {
+ 306   2              RI = 0;                 //清除RI位
+ 307   2              P0 = SBUF;              //P0显示串口数据
+ 308   2              P54 = RB8;              //P2.2显示校验位
+ 309   2          }
+ 310   1          if (TI)
+ 311   1          {
+ 312   2              TI = 0;                 //清除TI位
+ 313   2              busy = 0;               //清忙标志
+ 314   2          }
+ 315   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    124    ----
-   CONSTANT SIZE    =     28    ----
+   CODE SIZE        =    456    ----
+   CONSTANT SIZE    =     42    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =   ----       3
+   DATA SIZE        =      1       3
    IDATA SIZE       =   ----    ----
-   BIT SIZE         =      1    ----
+   BIT SIZE         =      1       2
 END OF MODULE INFORMATION.
 
 
-C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
