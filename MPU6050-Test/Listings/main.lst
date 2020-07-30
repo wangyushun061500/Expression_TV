@@ -1,4 +1,4 @@
-C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 21:49:00 PAGE 1   
+C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 22:25:52 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MAIN
@@ -10,341 +10,508 @@ line level    source
 
    1          #include "15w.h"
    2          #include "INTRINS.H"
-   3          
-   4          // å£°æ˜å…ƒå™¨ä»¶ç®¡è„š
-   5          
-   6          #define Vcc P20   //ç”µæºæ­£æ
-   7          #define Gnd P21   //ç”µæºè´Ÿæ
-   8          #define Scl P22   //I2Cæ—¶é’Ÿçº¿
-   9          #define Sda P23   //I2Cæ•°æ®çº¿
-  10          #define Xda P24   //å¤–æ¥I2Cæ•°æ®çº¿
-  11          #define Xcl P25   //å¤–æ¥I2Cæ—¶é’Ÿçº¿
-  12          #define Ad0 P26   //I2Cåœ°å€æœ€ä½ä½
-  13          #define Int P27   //ä¸­æ–­ä¿¡å·è¾“å‡º
-  14          
-  15          // å£°æ˜ä¸²å£ä¼ è¾“è®¾ç½®
-  16          
-  17          #define FOSC 24000000L    //ç³»ç»Ÿé¢‘ç‡
-  18          #define BAUD 115200     //æ³¢ç‰¹ç‡
-  19          #define NONE_PARITY     0       //æ— æ ¡éªŒ
-  20          #define ODD_PARITY      1       //å¥‡æ ¡éªŒ
-  21          #define EVEN_PARITY     2       //å¶æ ¡éªŒ
-  22          #define MARK_PARITY     3       //æ ‡è®°æ ¡éªŒ
-  23          #define SPACE_PARITY    4       //ç©ºç™½æ ¡éªŒ
-  24          #define PARITYBIT NONE_PARITY   //å®šä¹‰æ ¡éªŒä½
-  25          #define S1_S0 0x40              //P_SW1.6
-  26          #define S1_S1 0x80              //P_SW1.7
-  27          
-  28          // å£°æ˜mpu6050å†…éƒ¨åœ°å€
-  29          #define SMPLRT_DIV    0x19  //é™€èºä»ªé‡‡æ ·ç‡ï¼Œå…¸å‹å€¼ï¼š0x07(125Hz)
-  30          #define CONFIG      0x1A  //ä½é€šæ»¤æ³¢é¢‘ç‡ï¼Œå…¸å‹å€¼ï¼š0x06(5Hz)
-  31          #define GYRO_CONFIG   0x1B  //é™€èºä»ªè‡ªæ£€åŠæµ‹é‡èŒƒå›´ï¼Œå…¸å‹å€¼ï¼š0x18(ä¸è‡ªæ£€ï¼Œ2000deg/s)
-  32          #define ACCEL_CONFIG  0x1C  //åŠ é€Ÿè®¡è‡ªæ£€ã€æµ‹é‡èŒƒå›´åŠé«˜é€šæ»¤æ³¢é¢‘ç‡ï¼Œå…¸å‹å€¼ï¼š0x01(ä¸è‡ªæ
-             -£€ï¼Œ2Gï¼Œ5Hz)
-  33          #define ACCEL_XOUT_H  0x3B  
-  34          #define ACCEL_XOUT_L  0x3C
-  35          #define ACCEL_YOUT_H  0x3D
-  36          #define ACCEL_YOUT_L  0x3E
-  37          #define ACCEL_ZOUT_H  0x3F
-  38          #define ACCEL_ZOUT_L  0x40
-  39          #define TEMP_OUT_H    0x41
-  40          #define TEMP_OUT_L    0x42
-  41          #define GYRO_XOUT_H   0x43
-  42          #define GYRO_XOUT_L   0x44  
-  43          #define GYRO_YOUT_H   0x45
-  44          #define GYRO_YOUT_L   0x46
-  45          #define GYRO_ZOUT_H   0x47
-  46          #define GYRO_ZOUT_L   0x48
-  47          #define PWR_MGMT_1    0x6B  //ç”µæºç®¡ç†ï¼Œå…¸å‹å€¼ï¼š0x00(æ­£å¸¸å¯ç”¨)
-  48          #define WHO_AM_I    0x75  //IICåœ°å€å¯„å­˜å™¨(é»˜è®¤æ•°å€¼0x68ï¼Œåªè¯»)
-  49          #define SlaveAddress  0xd0  //IICå†™å…¥æ—¶çš„åœ°å€å­—èŠ‚æ•°æ®ï¼Œ+1ä¸ºè¯»å–
-  50          
-  51          // å˜é‡å£°æ˜
-  52          
-  53          bit busy;
-C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 21:49:00 PAGE 2   
+   3          #include <MATH.H>
+   4          
+   5          // ÉùÃ÷ÔªÆ÷¼ş¹Ü½Å
+   6          
+   7          #define Vcc P20   //µçÔ´Õı¼«
+   8          #define Gnd P21   //µçÔ´¸º¼«
+   9          #define Scl P22   //I2CÊ±ÖÓÏß
+  10          #define Sda P23   //I2CÊı¾İÏß
+  11          #define Xda P24   //Íâ½ÓI2CÊı¾İÏß
+  12          #define Xcl P25   //Íâ½ÓI2CÊ±ÖÓÏß
+  13          #define Ad0 P26   //I2CµØÖ·×îµÍÎ»
+  14          #define Int P27   //ÖĞ¶ÏĞÅºÅÊä³ö
+  15          
+  16          // ÉùÃ÷´®¿Ú´«ÊäÉèÖÃ
+  17          
+  18          #define FOSC 24000000L    //ÏµÍ³ÆµÂÊ
+  19          #define BAUD 115200     //²¨ÌØÂÊ
+  20          #define NONE_PARITY     0       //ÎŞĞ£Ñé
+  21          #define ODD_PARITY      1       //ÆæĞ£Ñé
+  22          #define EVEN_PARITY     2       //Å¼Ğ£Ñé
+  23          #define MARK_PARITY     3       //±ê¼ÇĞ£Ñé
+  24          #define SPACE_PARITY    4       //¿Õ°×Ğ£Ñé
+  25          #define PARITYBIT NONE_PARITY   //¶¨ÒåĞ£ÑéÎ»
+  26          #define S1_S0 0x40              //P_SW1.6
+  27          #define S1_S1 0x80              //P_SW1.7
+  28          
+  29          // ÉùÃ÷mpu6050ÄÚ²¿µØÖ·
+  30          #define SMPLRT_DIV    0x19  //ÍÓÂİÒÇ²ÉÑùÂÊ£¬µäĞÍÖµ£º0x07(125Hz)
+  31          #define CONFIG      0x1A  //µÍÍ¨ÂË²¨ÆµÂÊ£¬µäĞÍÖµ£º0x06(5Hz)
+  32          #define GYRO_CONFIG   0x1B  //ÍÓÂİÒÇ×Ô¼ì¼°²âÁ¿·¶Î§£¬µäĞÍÖµ£º0x18(²»×Ô¼ì£¬2000deg/s)
+  33          #define ACCEL_CONFIG  0x1C  //¼ÓËÙ¼Æ×Ô¼ì¡¢²âÁ¿·¶Î§¼°¸ßÍ¨ÂË²¨ÆµÂÊ£¬µäĞÍÖµ£º0x01(²»×Ô¼ì£¬2G£¬5Hz)
+  34          #define ACCEL_XOUT_H  0x3B  
+  35          #define ACCEL_XOUT_L  0x3C
+  36          #define ACCEL_YOUT_H  0x3D
+  37          #define ACCEL_YOUT_L  0x3E
+  38          #define ACCEL_ZOUT_H  0x3F
+  39          #define ACCEL_ZOUT_L  0x40
+  40          #define TEMP_OUT_H    0x41
+  41          #define TEMP_OUT_L    0x42
+  42          #define GYRO_XOUT_H   0x43
+  43          #define GYRO_XOUT_L   0x44  
+  44          #define GYRO_YOUT_H   0x45
+  45          #define GYRO_YOUT_L   0x46
+  46          #define GYRO_ZOUT_H   0x47
+  47          #define GYRO_ZOUT_L   0x48
+  48          #define PWR_MGMT_1    0x6B  //µçÔ´¹ÜÀí£¬µäĞÍÖµ£º0x00(Õı³£ÆôÓÃ)
+  49          #define WHO_AM_I    0x75  //IICµØÖ·¼Ä´æÆ÷(Ä¬ÈÏÊıÖµ0x68£¬Ö»¶Á)
+  50          #define SlaveAddress  0xd0  //IICĞ´ÈëÊ±µÄµØÖ·×Ö½ÚÊı¾İ£¬+1Îª¶ÁÈ¡
+  51          
+  52          // ±äÁ¿ÉùÃ÷
+  53          
+  54          bit busy;
+C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 22:25:52 PAGE 2   
 
-  54          unsigned char temp;//æš‚å­˜æ•°æ®
-  55          
-  56          // æå‰å£°æ˜å‡½æ•°
-  57          
-  58          void mpu6050_init();
-  59          void uart_init();
-  60          void Delay5us();
-  61          void Delay1000ms();
-  62          void SendData(unsigned char dat);
-  63          void SendString(char *s);
-  64          void  I2C_Start();
-  65          void  I2C_Stop();
-  66          void  I2C_SendACK(bit ack);
-  67          bit   I2C_RecvACK();
-  68          void  I2C_SendByte(unsigned char dat);
-  69          unsigned char I2C_RecvByte();
-  70          unsigned char Single_ReadI2C(unsigned char REG_Address);            //è¯»å–I2Cæ•°æ®
-  71          void  Single_WriteI2C(unsigned char REG_Address,unsigned char REG_data);    //å‘I2Cå†™å…¥æ•°æ®
-  72          
-  73          void main(void)
-  74          {
-  75   1        uart_init();
-  76   1        T2L = (65536 - (FOSC/4/BAUD));   //è®¾ç½®æ³¢ç‰¹ç‡é‡è£…å€¼
-  77   1          T2H = (65536 - (FOSC/4/BAUD))>>8;
-  78   1          AUXR = 0x14;                //T2ä¸º1Tæ¨¡å¼, å¹¶å¯åŠ¨å®šæ—¶å™¨2
-  79   1          AUXR |= 0x01;               //é€‰æ‹©å®šæ—¶å™¨2ä¸ºä¸²å£1çš„æ³¢ç‰¹ç‡å‘ç”Ÿå™¨
-  80   1          ES = 1;                     //ä½¿èƒ½ä¸²å£1ä¸­æ–­
-  81   1          EA = 1;
-  82   1        temp = 0x55;
-  83   1        Delay1000ms();
-  84   1        SendString("STC15F2K60S2\r\nUart ON !\r\n");
-  85   1        mpu6050_init();
-  86   1        while (1)
-  87   1        {
-  88   2          temp = Single_ReadI2C(ACCEL_XOUT_L);
-  89   2          SendData('0' + temp/100);
-  90   2          SendData('0' + temp/10%10);
-  91   2          SendData('0' + temp%10);
-  92   2          SendString("\r\n");
-  93   2          Delay1000ms();
-  94   2        }
-  95   1        
-  96   1      
-  97   1      }
-  98          
-  99          /*mpu6050åˆå§‹åŒ–å‡½æ•°*/
- 100          void mpu6050_init ()
- 101          {
- 102   1        // é…ç½®IOè¾“å‡ºæ¨¡å¼
- 103   1        P2M0 = 0x01;
- 104   1        P2M1 = 0x00;
- 105   1        //é…ç½®ç”µæºç”µå¹³
- 106   1        Vcc = 1;
- 107   1        Gnd = 0;
- 108   1        //é…ç½®mpu6050åœ°å€ï¼Œad0ä¸ºè®¾ç½®æœ€ä½ä½åœ°å€è®¾ç½®
- 109   1        Int = 0;
- 110   1        //åˆå§‹åŒ–å¯„å­˜å™¨
- 111   1        Delay1000ms();
- 112   1        Single_WriteI2C(PWR_MGMT_1, 0x00);  //è§£é™¤ä¼‘çœ çŠ¶æ€
- 113   1        Single_WriteI2C(SMPLRT_DIV, 0x07);
- 114   1        Single_WriteI2C(CONFIG, 0x06);
- 115   1        Single_WriteI2C(GYRO_CONFIG, 0x18);
-C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 21:49:00 PAGE 3   
+  55          float value = 0;
+  56          
+  57          // ÌáÇ°ÉùÃ÷º¯Êı
+  58          
+  59          void mpu6050_init();
+  60          void uart_init();
+  61          void Delay5us();
+  62          void Delay1000ms();
+  63          void SendData(unsigned char dat);
+  64          void SendString(char *s);
+  65          void  I2C_Start();
+  66          void  I2C_Stop();
+  67          void  I2C_SendACK(bit ack);
+  68          bit   I2C_RecvACK();
+  69          void  I2C_SendByte(unsigned char dat);
+  70          unsigned char I2C_RecvByte();
+  71          unsigned char Single_ReadI2C(unsigned char REG_Address);            //¶ÁÈ¡I2CÊı¾İ
+  72          void  Single_WriteI2C(unsigned char REG_Address,unsigned char REG_data);    //ÏòI2CĞ´ÈëÊı¾İ
+  73          int GetData(unsigned char REG_Address);
+  74          int Get_Gyro_Data(unsigned char gyro_id);
+  75          int MPU6050_Get_Angle(int x,int y,int z,unsigned char dir);
+  76          int MPU6050_Get_Data(unsigned angle_id);
+  77          void serial_one_send_number(long num);
+  78          void serial_one_send_float(double float_val, char bit_val);
+  79          
+  80          
+  81          void main(void)
+  82          {
+  83   1        uart_init();
+  84   1        T2L = (65536 - (FOSC/4/BAUD));   //ÉèÖÃ²¨ÌØÂÊÖØ×°Öµ
+  85   1          T2H = (65536 - (FOSC/4/BAUD))>>8;
+  86   1          AUXR = 0x14;                //T2Îª1TÄ£Ê½, ²¢Æô¶¯¶¨Ê±Æ÷2
+  87   1          AUXR |= 0x01;               //Ñ¡Ôñ¶¨Ê±Æ÷2Îª´®¿Ú1µÄ²¨ÌØÂÊ·¢ÉúÆ÷
+  88   1          ES = 1;                     //Ê¹ÄÜ´®¿Ú1ÖĞ¶Ï
+  89   1          EA = 1;
+  90   1        Delay1000ms();
+  91   1        SendString("STC15F2K60S2\r\nUart ON !\r\n");
+  92   1        mpu6050_init();
+  93   1        while (1)
+  94   1        {
+  95   2          value = MPU6050_Get_Data(1);          //»ñÈ¡ÓëxÖáµÄ¼Ğ½Ç£¬½Ç¶È±»·Å´ó10±¶
+  96   2          SendString("xÖáµÄ¼Ğ½Ç£º");
+  97   2          Delay5us();
+  98   2          serial_one_send_float(value / 10,1);      //½Ç¶È³ıÒÔ10£¬²¢´Ó´®¿Ú·¢³ö,µÚ¶ş¸ö²ÎÊıÎª±£ÁôÒ»Î»Ğ¡Êı
+  99   2          Delay5us();
+ 100   2          SendString("\r\n");               //»»ĞĞ
+ 101   2          
+ 102   2          value = MPU6050_Get_Data(2);          //»ñÈ¡ÓëyÖáµÄ¼Ğ½Ç£¬½Ç¶È±»·Å´ó10±¶
+ 103   2          SendString("yÖáµÄ¼Ğ½Ç£º");
+ 104   2          Delay5us();
+ 105   2          serial_one_send_float(value / 10,1);      //½Ç¶È³ıÒÔ10£¬²¢´Ó´®¿Ú·¢³ö
+ 106   2          Delay5us();
+ 107   2          SendString("\r\n");               //»»ĞĞ
+ 108   2          
+ 109   2          value = MPU6050_Get_Data(3);          //»ñÈ¡ÓëzÖáµÄ¼Ğ½Ç£¬½Ç¶È±»·Å´ó10±¶
+ 110   2          SendString("zÖáµÄ¼Ğ½Ç£º");
+ 111   2          Delay5us();
+ 112   2          serial_one_send_float(value / 10,1);      //½Ç¶È³ıÒÔ10£¬²¢´Ó´®¿Ú·¢³ö
+ 113   2          Delay5us();
+ 114   2          SendString("\r\n");               //»»ĞĞ
+ 115   2          
+ 116   2          value = MPU6050_Get_Data(4);          //»ñÈ¡ÓëxÖá¼ÓËÙ¶È£¬ÊıÖµ±»·Å´ó100±¶
+C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 22:25:52 PAGE 3   
 
- 116   1        Single_WriteI2C(ACCEL_CONFIG, 0x01);
- 117   1        SendString("Init Done!\r\n");
- 118   1      }
- 119          
- 120          /*uartåˆå§‹åŒ–å‡½æ•°*/
- 121          void uart_init ()
- 122          {
- 123   1        ACC = P_SW1;
- 124   1          ACC &= ~(S1_S0 | S1_S1);    //S1_S0=0 S1_S1=0
- 125   1          P_SW1 = ACC;                //(P3.0/RxD, P3.1/TxD)
- 126   1        #if (PARITYBIT == NONE_PARITY)
- 127   1          SCON = 0x50;                //8ä½å¯å˜æ³¢ç‰¹ç‡
- 128   1        #elif (PARITYBIT == ODD_PARITY) || (PARITYBIT == EVEN_PARITY) || (PARITYBIT == MARK_PARITY)
-                  SCON = 0xda;                //9ä½å¯å˜æ³¢ç‰¹ç‡,æ ¡éªŒä½åˆå§‹ä¸º1
+ 117   2          SendString("xÖá¼ÓËÙ¶È£º");
+ 118   2          Delay5us();
+ 119   2          serial_one_send_float(value/100,1);       //½Ç¶È³ıÒÔ100£¬²¢´Ó´®¿Ú·¢³ö£¬µÚ¶ş¸ö²ÎÊıÎª±£ÁôÒ»Î»Ğ¡Êı
+ 120   2          Delay5us();
+ 121   2          SendString("\r\n");               //»»ĞĞ
+ 122   2          
+ 123   2          value = MPU6050_Get_Data(4);          //»ñÈ¡ÓëyÖá¼ÓËÙ¶È£¬ÊıÖµ±»·Å´ó100±¶
+ 124   2          SendString("yÖá¼ÓËÙ¶È£º");
+ 125   2          Delay5us();
+ 126   2          serial_one_send_float(value / 100,1);     //½Ç¶È³ıÒÔ100£¬²¢´Ó´®¿Ú·¢³ö
+ 127   2          Delay5us();
+ 128   2          SendString("\r\n");               //»»ĞĞ
+ 129   2          
+ 130   2          value = MPU6050_Get_Data(4);          //»ñÈ¡ÓëzÖá¼ÓËÙ¶È£¬ÊıÖµ±»·Å´ó100±¶
+ 131   2          SendString("zÖá¼ÓËÙ¶È£º");
+ 132   2          Delay5us();
+ 133   2          serial_one_send_float(value / 100,1);     //½Ç¶È³ıÒÔ100£¬²¢´Ó´®¿Ú·¢³ö
+ 134   2          Delay5us();
+ 135   2          SendString("\r\n");               //»»ĞĞ
+ 136   2          SendString("\r\n");               //»»ĞĞ
+ 137   2          Delay1000ms();
+ 138   2        }
+ 139   1        
+ 140   1      
+ 141   1      }
+ 142          
+ 143          /*mpu6050³õÊ¼»¯º¯Êı*/
+ 144          void mpu6050_init ()
+ 145          {
+ 146   1        // ÅäÖÃIOÊä³öÄ£Ê½
+ 147   1        P2M0 = 0x01;
+ 148   1        P2M1 = 0x00;
+ 149   1        //ÅäÖÃµçÔ´µçÆ½
+ 150   1        Vcc = 1;
+ 151   1        Gnd = 0;
+ 152   1        //ÅäÖÃmpu6050µØÖ·£¬ad0ÎªÉèÖÃ×îµÍÎ»µØÖ·ÉèÖÃ
+ 153   1        Int = 0;
+ 154   1        //³õÊ¼»¯¼Ä´æÆ÷
+ 155   1        Delay1000ms();
+ 156   1        Single_WriteI2C(PWR_MGMT_1, 0x00);  //½â³ıĞİÃß×´Ì¬
+ 157   1        Single_WriteI2C(SMPLRT_DIV, 0x07);
+ 158   1        Single_WriteI2C(CONFIG, 0x06);
+ 159   1        Single_WriteI2C(GYRO_CONFIG, 0x18);
+ 160   1        Single_WriteI2C(ACCEL_CONFIG, 0x01);
+ 161   1        SendString("Init Done!\r\n");
+ 162   1      }
+ 163          
+ 164          /*uart³õÊ¼»¯º¯Êı*/
+ 165          void uart_init ()
+ 166          {
+ 167   1        ACC = P_SW1;
+ 168   1          ACC &= ~(S1_S0 | S1_S1);    //S1_S0=0 S1_S1=0
+ 169   1          P_SW1 = ACC;                //(P3.0/RxD, P3.1/TxD)
+ 170   1        #if (PARITYBIT == NONE_PARITY)
+ 171   1          SCON = 0x50;                //8Î»¿É±ä²¨ÌØÂÊ
+ 172   1        #elif (PARITYBIT == ODD_PARITY) || (PARITYBIT == EVEN_PARITY) || (PARITYBIT == MARK_PARITY)
+                  SCON = 0xda;                //9Î»¿É±ä²¨ÌØÂÊ,Ğ£ÑéÎ»³õÊ¼Îª1
                 #elif (PARITYBIT == SPACE_PARITY)
-                  SCON = 0xd2;                //9ä½å¯å˜æ³¢ç‰¹ç‡,æ ¡éªŒä½åˆå§‹ä¸º0
+                  SCON = 0xd2;                //9Î»¿É±ä²¨ÌØÂÊ,Ğ£ÑéÎ»³õÊ¼Îª0
                 #endif
- 133   1      }
- 134          
- 135          /*å»¶æ—¶5uså‡½æ•°*/
- 136          void Delay5us()   //@24.000MHz
- 137          {
- 138   1        unsigned char i;
- 139   1      
- 140   1        _nop_();
- 141   1        _nop_();
- 142   1        i = 27;
- 143   1        while (--i);
- 144   1      }
- 145          
- 146          /*å»¶æ—¶1så‡½æ•°*/
- 147          void Delay1000ms()    //@24.000MHz
- 148          {
- 149   1        unsigned char i, j, k;
- 150   1      
- 151   1        _nop_();
- 152   1        _nop_();
- 153   1        i = 92;
- 154   1        j = 50;
- 155   1        k = 238;
- 156   1        do
- 157   1        {
- 158   2          do
- 159   2          {
- 160   3            while (--k);
- 161   3          } while (--j);
- 162   2        } while (--i);
- 163   1      }
- 164          
- 165          /*ä¸²å£æ•°æ®å‘é€*/
- 166          void SendData(unsigned char dat)
- 167          {
- 168   1          while (busy);               //ç­‰å¾…å‰é¢çš„æ•°æ®å‘é€å®Œæˆ
- 169   1          ACC = dat;                  //è·å–æ ¡éªŒä½P (PSW.0)
- 170   1          if (P)                      //æ ¹æ®Pæ¥è®¾ç½®æ ¡éªŒä½
- 171   1          {
- 172   2          #if (PARITYBIT == ODD_PARITY)
-                    TB8 = 0;                //è®¾ç½®æ ¡éªŒä½ä¸º0
-                  #elif (PARITYBIT == EVEN_PARITY)
-                    TB8 = 1;                //è®¾ç½®æ ¡éªŒä½ä¸º1
-                  #endif
- 177   2          }
-C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 21:49:00 PAGE 4   
+ 177   1      }
+ 178          
+C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 22:25:52 PAGE 4   
 
- 178   1          else
- 179   1          {
- 180   2          #if (PARITYBIT == ODD_PARITY)
-                        TB8 = 1;                //è®¾ç½®æ ¡éªŒä½ä¸º1
-                  #elif (PARITYBIT == EVEN_PARITY)
-                        TB8 = 0;                //è®¾ç½®æ ¡éªŒä½ä¸º0
-                  #endif
- 185   2          }
- 186   1          busy = 1;
- 187   1          SBUF = ACC;                 //å†™æ•°æ®åˆ°UARTæ•°æ®å¯„å­˜å™¨
+ 179          /*ÑÓÊ±5usº¯Êı*/
+ 180          void Delay5us()   //@24.000MHz
+ 181          {
+ 182   1        unsigned char i;
+ 183   1      
+ 184   1        _nop_();
+ 185   1        _nop_();
+ 186   1        i = 27;
+ 187   1        while (--i);
  188   1      }
  189          
- 190          /*å‘é€å­—ç¬¦ä¸²*/
- 191          void SendString(char *s)
+ 190          /*ÑÓÊ±1sº¯Êı*/
+ 191          void Delay1000ms()    //@24.000MHz
  192          {
- 193   1          while (*s)                  //æ£€æµ‹å­—ç¬¦ä¸²ç»“æŸæ ‡å¿—
- 194   1          {
- 195   2              SendData(*s++);         //å‘é€å½“å‰å­—ç¬¦
- 196   2          }
- 197   1      }
- 198          
- 199          /*I2Cå¼€å§‹ä¿¡å·*/
- 200          void I2C_Start()
- 201          {
- 202   1          Sda = 1;                    //æ‹‰é«˜æ•°æ®çº¿
- 203   1          Scl = 1;                    //æ‹‰é«˜æ—¶é’Ÿçº¿
- 204   1          Delay5us();                 //å»¶æ—¶
- 205   1          Sda = 0;                    //äº§ç”Ÿä¸‹é™æ²¿
- 206   1          Delay5us();                 //å»¶æ—¶
- 207   1          Scl = 0;                    //æ‹‰ä½æ—¶é’Ÿçº¿
- 208   1      }
- 209          
- 210          /*I2Cåœæ­¢ä¿¡å·*/
- 211          void I2C_Stop()
- 212          {
- 213   1          Sda = 0;                    //æ‹‰ä½æ•°æ®çº¿
- 214   1          Scl = 1;                    //æ‹‰é«˜æ—¶é’Ÿçº¿
- 215   1          Delay5us();                 //å»¶æ—¶
- 216   1          Sda = 1;                    //äº§ç”Ÿä¸Šå‡æ²¿
- 217   1          Delay5us();                 //å»¶æ—¶
- 218   1      }
- 219          
- 220          /*I2Cå‘é€åº”ç­”ä¿¡å·*/
- 221          void I2C_SendACK(bit ack)
- 222          {
- 223   1          Sda = ack;                  //å†™åº”ç­”ä¿¡å·
- 224   1          Scl = 1;                    //æ‹‰é«˜æ—¶é’Ÿçº¿
- 225   1          Delay5us();                 //å»¶æ—¶
- 226   1          Scl = 0;                    //æ‹‰ä½æ—¶é’Ÿçº¿
- 227   1          Delay5us();                 //å»¶æ—¶
- 228   1      }
- 229          
- 230          /*I2Cæ¥æ”¶åº”ç­”ä¿¡å·*/
- 231          bit I2C_RecvACK()
- 232          {
- 233   1        bit ack;
- 234   1          Scl = 1;                    //æ‹‰é«˜æ—¶é’Ÿçº¿
- 235   1          Delay5us();                 //å»¶æ—¶
- 236   1          ack = Sda;                   //è¯»åº”ç­”ä¿¡å·
- 237   1          Scl = 0;                    //æ‹‰ä½æ—¶é’Ÿçº¿
- 238   1          Delay5us();                 //å»¶æ—¶
- 239   1          return ack;
-C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 21:49:00 PAGE 5   
+ 193   1        unsigned char i, j, k;
+ 194   1      
+ 195   1        _nop_();
+ 196   1        _nop_();
+ 197   1        i = 92;
+ 198   1        j = 50;
+ 199   1        k = 238;
+ 200   1        do
+ 201   1        {
+ 202   2          do
+ 203   2          {
+ 204   3            while (--k);
+ 205   3          } while (--j);
+ 206   2        } while (--i);
+ 207   1      }
+ 208          
+ 209          /*´®¿ÚÊı¾İ·¢ËÍ*/
+ 210          void SendData(unsigned char dat)
+ 211          {
+ 212   1          while (busy);               //µÈ´ıÇ°ÃæµÄÊı¾İ·¢ËÍÍê³É
+ 213   1          ACC = dat;                  //»ñÈ¡Ğ£ÑéÎ»P (PSW.0)
+ 214   1          if (P)                      //¸ù¾İPÀ´ÉèÖÃĞ£ÑéÎ»
+ 215   1          {
+ 216   2          #if (PARITYBIT == ODD_PARITY)
+                    TB8 = 0;                //ÉèÖÃĞ£ÑéÎ»Îª0
+                  #elif (PARITYBIT == EVEN_PARITY)
+                    TB8 = 1;                //ÉèÖÃĞ£ÑéÎ»Îª1
+                  #endif
+ 221   2          }
+ 222   1          else
+ 223   1          {
+ 224   2          #if (PARITYBIT == ODD_PARITY)
+                        TB8 = 1;                //ÉèÖÃĞ£ÑéÎ»Îª1
+                  #elif (PARITYBIT == EVEN_PARITY)
+                        TB8 = 0;                //ÉèÖÃĞ£ÑéÎ»Îª0
+                  #endif
+ 229   2          }
+ 230   1          busy = 1;
+ 231   1          SBUF = ACC;                 //Ğ´Êı¾İµ½UARTÊı¾İ¼Ä´æÆ÷
+ 232   1      }
+ 233          
+ 234          /*·¢ËÍ×Ö·û´®*/
+ 235          void SendString(char *s)
+ 236          {
+ 237   1          while (*s)                  //¼ì²â×Ö·û´®½áÊø±êÖ¾
+ 238   1          {
+ 239   2              SendData(*s++);         //·¢ËÍµ±Ç°×Ö·û
+ 240   2          }
+C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 22:25:52 PAGE 5   
 
- 240   1      }
- 241          
- 242          /*I2Cå‘é€ä¸€ä¸ªå­—èŠ‚æ•°æ®*/
- 243          void I2C_SendByte(unsigned char dat)
- 244          {
- 245   1          unsigned char i;
- 246   1          for (i=0; i<8; i++)         //8ä½è®¡æ•°å™¨
- 247   1          {
- 248   2              dat = dat << 1;         //ç§»å‡ºæ•°æ®çš„æœ€é«˜ä½
- 249   2              Sda = CY;               //é€æ•°æ®å£
- 250   2              Scl = 1;                //æ‹‰é«˜æ—¶é’Ÿçº¿
- 251   2              Delay5us();             //å»¶æ—¶
- 252   2              Scl = 0;                //æ‹‰ä½æ—¶é’Ÿçº¿
- 253   2              Delay5us();             //å»¶æ—¶
- 254   2          }
- 255   1           while(I2C_RecvACK());
- 256   1      }
- 257          
- 258          /*I2Cæ¥æ”¶ä¸€ä¸ªå­—èŠ‚æ•°æ®*/
- 259          unsigned char I2C_RecvByte()
- 260          {
- 261   1          unsigned char i;
- 262   1          unsigned char dat = 0;
- 263   1          Sda = 1;                    //ä½¿èƒ½å†…éƒ¨ä¸Šæ‹‰,å‡†å¤‡è¯»å–æ•°æ®,
- 264   1          for (i=0; i<8; i++)         //8ä½è®¡æ•°å™¨
- 265   1          {
- 266   2              dat = dat << 1;
- 267   2              Scl = 1;                //æ‹‰é«˜æ—¶é’Ÿçº¿
- 268   2              Delay5us();             //å»¶æ—¶
- 269   2              dat |= Sda;             //è¯»æ•°æ®               
- 270   2              Scl = 0;                //æ‹‰ä½æ—¶é’Ÿçº¿
- 271   2              Delay5us();             //å»¶æ—¶
- 272   2          }
- 273   1          return dat;
- 274   1      }
- 275          
- 276          /*I2Cå†™å…¥ä¸€ä¸ªå­—èŠ‚æ•°æ®*/
- 277          void Single_WriteI2C(unsigned char REG_Address,unsigned char REG_data)
- 278          {
- 279   1          I2C_Start();                  //èµ·å§‹ä¿¡å·
- 280   1          I2C_SendByte(SlaveAddress);   //å‘é€è®¾å¤‡åœ°å€+å†™ä¿¡å·
- 281   1          I2C_SendByte(REG_Address);    //å†…éƒ¨å¯„å­˜å™¨åœ°å€ï¼Œ
- 282   1          I2C_SendByte(REG_data);       //å†…éƒ¨å¯„å­˜å™¨æ•°æ®ï¼Œ
- 283   1          I2C_Stop();                   //å‘é€åœæ­¢ä¿¡å·
+ 241   1      }
+ 242          
+ 243          /*I2C¿ªÊ¼ĞÅºÅ*/
+ 244          void I2C_Start()
+ 245          {
+ 246   1          Sda = 1;                    //À­¸ßÊı¾İÏß
+ 247   1          Scl = 1;                    //À­¸ßÊ±ÖÓÏß
+ 248   1          Delay5us();                 //ÑÓÊ±
+ 249   1          Sda = 0;                    //²úÉúÏÂ½µÑØ
+ 250   1          Delay5us();                 //ÑÓÊ±
+ 251   1          Scl = 0;                    //À­µÍÊ±ÖÓÏß
+ 252   1      }
+ 253          
+ 254          /*I2CÍ£Ö¹ĞÅºÅ*/
+ 255          void I2C_Stop()
+ 256          {
+ 257   1          Sda = 0;                    //À­µÍÊı¾İÏß
+ 258   1          Scl = 1;                    //À­¸ßÊ±ÖÓÏß
+ 259   1          Delay5us();                 //ÑÓÊ±
+ 260   1          Sda = 1;                    //²úÉúÉÏÉıÑØ
+ 261   1          Delay5us();                 //ÑÓÊ±
+ 262   1      }
+ 263          
+ 264          /*I2C·¢ËÍÓ¦´ğĞÅºÅ*/
+ 265          void I2C_SendACK(bit ack)
+ 266          {
+ 267   1          Sda = ack;                  //Ğ´Ó¦´ğĞÅºÅ
+ 268   1          Scl = 1;                    //À­¸ßÊ±ÖÓÏß
+ 269   1          Delay5us();                 //ÑÓÊ±
+ 270   1          Scl = 0;                    //À­µÍÊ±ÖÓÏß
+ 271   1          Delay5us();                 //ÑÓÊ±
+ 272   1      }
+ 273          
+ 274          /*I2C½ÓÊÕÓ¦´ğĞÅºÅ*/
+ 275          bit I2C_RecvACK()
+ 276          {
+ 277   1        bit ack;
+ 278   1          Scl = 1;                    //À­¸ßÊ±ÖÓÏß
+ 279   1          Delay5us();                 //ÑÓÊ±
+ 280   1          ack = Sda;                   //¶ÁÓ¦´ğĞÅºÅ
+ 281   1          Scl = 0;                    //À­µÍÊ±ÖÓÏß
+ 282   1          Delay5us();                 //ÑÓÊ±
+ 283   1          return ack;
  284   1      }
  285          
- 286          /*ä»I2Cè®¾å¤‡è¯»å–ä¸€ä¸ªå­—èŠ‚æ•°æ®*/
- 287          unsigned char Single_ReadI2C(unsigned char REG_Address)
+ 286          /*I2C·¢ËÍÒ»¸ö×Ö½ÚÊı¾İ*/
+ 287          void I2C_SendByte(unsigned char dat)
  288          {
- 289   1        unsigned char REG_data;
- 290   1        I2C_Start();                   //èµ·å§‹ä¿¡å·
- 291   1        I2C_SendByte(SlaveAddress);    //å‘é€è®¾å¤‡åœ°å€+å†™ä¿¡å·
- 292   1        I2C_SendByte(REG_Address);     //å‘é€å­˜å‚¨å•å…ƒåœ°å€ï¼Œä»0å¼€å§‹  
- 293   1        I2C_Start();                   //èµ·å§‹ä¿¡å·
- 294   1        I2C_SendByte(SlaveAddress+1);  //å‘é€è®¾å¤‡åœ°å€+è¯»ä¿¡å·
- 295   1        REG_data=I2C_RecvByte();       //è¯»å‡ºå¯„å­˜å™¨æ•°æ®
- 296   1        I2C_SendACK(1);                //æ¥æ”¶åº”ç­”ä¿¡å·
- 297   1        I2C_Stop();                    //åœæ­¢ä¿¡å·
- 298   1        return REG_data;
- 299   1      }
- 300          
- 301          /*uartä¸­æ–­æœåŠ¡ç¨‹åº*/
-C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 21:49:00 PAGE 6   
+ 289   1          unsigned char i;
+ 290   1          for (i=0; i<8; i++)         //8Î»¼ÆÊıÆ÷
+ 291   1          {
+ 292   2              dat = dat << 1;         //ÒÆ³öÊı¾İµÄ×î¸ßÎ»
+ 293   2              Sda = CY;               //ËÍÊı¾İ¿Ú
+ 294   2              Scl = 1;                //À­¸ßÊ±ÖÓÏß
+ 295   2              Delay5us();             //ÑÓÊ±
+ 296   2              Scl = 0;                //À­µÍÊ±ÖÓÏß
+ 297   2              Delay5us();             //ÑÓÊ±
+ 298   2          }
+ 299   1           while(I2C_RecvACK());
+ 300   1      }
+ 301          
+ 302          /*I2C½ÓÊÕÒ»¸ö×Ö½ÚÊı¾İ*/
+C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 22:25:52 PAGE 6   
 
- 302          void Uart() interrupt 4
- 303          {
- 304   1          if (RI)
- 305   1          {
- 306   2              RI = 0;                 //æ¸…é™¤RIä½
- 307   2              P0 = SBUF;              //P0æ˜¾ç¤ºä¸²å£æ•°æ®
- 308   2              P54 = RB8;              //P2.2æ˜¾ç¤ºæ ¡éªŒä½
- 309   2          }
- 310   1          if (TI)
- 311   1          {
- 312   2              TI = 0;                 //æ¸…é™¤TIä½
- 313   2              busy = 0;               //æ¸…å¿™æ ‡å¿—
- 314   2          }
- 315   1      }
+ 303          unsigned char I2C_RecvByte()
+ 304          {
+ 305   1          unsigned char i;
+ 306   1          unsigned char dat = 0;
+ 307   1          Sda = 1;                    //Ê¹ÄÜÄÚ²¿ÉÏÀ­,×¼±¸¶ÁÈ¡Êı¾İ,
+ 308   1          for (i=0; i<8; i++)         //8Î»¼ÆÊıÆ÷
+ 309   1          {
+ 310   2              dat = dat << 1;
+ 311   2              Scl = 1;                //À­¸ßÊ±ÖÓÏß
+ 312   2              Delay5us();             //ÑÓÊ±
+ 313   2              dat |= Sda;             //¶ÁÊı¾İ               
+ 314   2              Scl = 0;                //À­µÍÊ±ÖÓÏß
+ 315   2              Delay5us();             //ÑÓÊ±
+ 316   2          }
+ 317   1          return dat;
+ 318   1      }
+ 319          
+ 320          /*I2CĞ´ÈëÒ»¸ö×Ö½ÚÊı¾İ*/
+ 321          void Single_WriteI2C(unsigned char REG_Address,unsigned char REG_data)
+ 322          {
+ 323   1          I2C_Start();                  //ÆğÊ¼ĞÅºÅ
+ 324   1          I2C_SendByte(SlaveAddress);   //·¢ËÍÉè±¸µØÖ·+Ğ´ĞÅºÅ
+ 325   1          I2C_SendByte(REG_Address);    //ÄÚ²¿¼Ä´æÆ÷µØÖ·£¬
+ 326   1          I2C_SendByte(REG_data);       //ÄÚ²¿¼Ä´æÆ÷Êı¾İ£¬
+ 327   1          I2C_Stop();                   //·¢ËÍÍ£Ö¹ĞÅºÅ
+ 328   1      }
+ 329          
+ 330          /*´ÓI2CÉè±¸¶ÁÈ¡Ò»¸ö×Ö½ÚÊı¾İ*/
+ 331          unsigned char Single_ReadI2C(unsigned char REG_Address)
+ 332          {
+ 333   1        unsigned char REG_data;
+ 334   1        I2C_Start();                   //ÆğÊ¼ĞÅºÅ
+ 335   1        I2C_SendByte(SlaveAddress);    //·¢ËÍÉè±¸µØÖ·+Ğ´ĞÅºÅ
+ 336   1        I2C_SendByte(REG_Address);     //·¢ËÍ´æ´¢µ¥ÔªµØÖ·£¬´Ó0¿ªÊ¼  
+ 337   1        I2C_Start();                   //ÆğÊ¼ĞÅºÅ
+ 338   1        I2C_SendByte(SlaveAddress+1);  //·¢ËÍÉè±¸µØÖ·+¶ÁĞÅºÅ
+ 339   1        REG_data=I2C_RecvByte();       //¶Á³ö¼Ä´æÆ÷Êı¾İ
+ 340   1        I2C_SendACK(1);                //½ÓÊÕÓ¦´ğĞÅºÅ
+ 341   1        I2C_Stop();                    //Í£Ö¹ĞÅºÅ
+ 342   1        return REG_data;
+ 343   1      }
+ 344          
+ 345          /*Êı¾İÈÚºÏËã·¨*/
+ 346          int GetData(unsigned char REG_Address)
+ 347          {
+ 348   1        unsigned char H,L;
+ 349   1        H=Single_ReadI2C(REG_Address);
+ 350   1        L=Single_ReadI2C(REG_Address+1);
+ 351   1        return (H<<8)+L;   //ºÏ³ÉÊı¾İ
+ 352   1      }
+ 353          
+ 354          /*»ñÈ¡½ÇËÙ¶È»òÕß¼ÓËÙ¶È*/
+ 355          int Get_Gyro_Data(unsigned char gyro_id)
+ 356          {
+ 357   1        switch(gyro_id)
+ 358   1        {
+ 359   2          case 1: return GetData(ACCEL_XOUT_H); break;
+ 360   2          case 2: return GetData(ACCEL_YOUT_H); break;
+ 361   2          case 3: return GetData(ACCEL_ZOUT_H); break;
+ 362   2          case 4: return GetData(GYRO_XOUT_H) ; break;
+ 363   2          case 5: return GetData(GYRO_YOUT_H) ; break;
+ 364   2          case 6: return GetData(GYRO_ZOUT_H) ; break;
+C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 22:25:52 PAGE 7   
+
+ 365   2        }
+ 366   1        return 0;
+ 367   1      }
+ 368          
+ 369          /*×ª»»¼Ğ½Ç*/
+ 370          int MPU6050_Get_Angle(int x,int y,int z,unsigned char dir)
+ 371          {
+ 372   1        float xdata temp;
+ 373   1        float xdata res = 0;
+ 374   1        switch(dir)
+ 375   1        {
+ 376   2          case 0://ÓëzÖáµÄ¼Ğ½Ç
+ 377   2              temp = sqrt(((float)x*(float)x+(float)y*(float)y))/(float)z;
+ 378   2              res  = atan(temp);
+ 379   2          break;
+ 380   2          case 1://ÓëxÖáµÄ¼Ğ½Ç
+ 381   2              temp = (float)x/sqrt(((float)y*(float)y+(float)z*(float)z));
+ 382   2              res  = atan(temp);
+ 383   2          break;
+ 384   2          case 2://ÓëyÖáµÄ¼Ğ½Ç
+ 385   2              temp = (float)y/sqrt(((float)x*(float)x+(float)z*(float)z));
+ 386   2              res  = atan(temp);
+ 387   2          break;
+ 388   2        }
+ 389   1        return (int)(res*1800/3.1416);//»¡¶È×ª»»Îª½Ç¶È,À©´ó10±¶
+ 390   1      }
+ 391          
+ 392          /*ÊıÖµ´¦Àí*/
+ 393          int MPU6050_Get_Data(unsigned angle_id)
+ 394          {
+ 395   1        switch(angle_id)
+ 396   1        {
+ 397   2          case 1:return MPU6050_Get_Angle( Get_Gyro_Data(1), Get_Gyro_Data(2), Get_Gyro_Data(3), 1);break;
+ 398   2          case 2:return MPU6050_Get_Angle( Get_Gyro_Data(1), Get_Gyro_Data(2), Get_Gyro_Data(3), 2);break;
+ 399   2          case 3:return MPU6050_Get_Angle( Get_Gyro_Data(1), Get_Gyro_Data(2), Get_Gyro_Data(3), 0);break;
+ 400   2          case 4:return (int)((float)((float)Get_Gyro_Data(4)/16384)*9.8*100);
+ 401   2          case 5:return (int)((float)((float)Get_Gyro_Data(5)/16384)*9.8*100);
+ 402   2          case 6:return (int)((float)((float)Get_Gyro_Data(6)/16384)*9.8*100);
+ 403   2        }
+ 404   1        return 0;
+ 405   1      }
+ 406          
+ 407          /*uart·¢ËÍlongÊıÖµ*/
+ 408          void serial_one_send_number(long num)
+ 409          {
+ 410   1        long dat = 0;
+ 411   1        unsigned char  length = 0;
+ 412   1        if(num < 0)                   //µ±ÊıÖµÎª¸ºÊıÊ±
+ 413   1        {
+ 414   2          SendData('-');  //Êä³ö¸ººÅ
+ 415   2          num = -num;                 //½«ÊıÖµÈ¡Ïà·´Êı
+ 416   2        }
+ 417   1        
+ 418   1        if(num == 0)                  //µ±ÊıÖµÎª0Ê±
+ 419   1          SendData('0');  //Êä³ö×Ö·û0
+ 420   1        else                      //µ±ÊıÖµ²»Îª0Ê±
+ 421   1        {
+ 422   2          while(num)                  //½«ÊıÖµµ¹¹ıÀ´
+ 423   2          {
+ 424   3            dat = dat * 10;
+ 425   3            dat = dat + num % 10;
+ 426   3            num = num / 10;
+C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 22:25:52 PAGE 8   
+
+ 427   3            length++;
+ 428   3          }
+ 429   2          
+ 430   2          while(length--)             //´ÓµÚÒ»Î»¿ªÊ¼Êä³öµ¹¹ıÀ´µÄÊıÖµ
+ 431   2          {
+ 432   3            SendData(dat % 10 + '0');
+ 433   3            dat = dat / 10;
+ 434   3          }
+ 435   2        }
+ 436   1      }
+ 437          
+ 438          
+ 439          void serial_one_send_float(double float_val, char bit_val)
+ 440          {
+ 441   1        long xdata value_int = 0;
+ 442   1        long xdata value_flt = 0;
+ 443   1        
+ 444   1        if(float_val < 0)
+ 445   1        {
+ 446   2          SendData('-');
+ 447   2          float_val = -float_val;
+ 448   2        }
+ 449   1        
+ 450   1        value_int = (long)float_val;
+ 451   1        
+ 452   1        float_val = float_val - (double)value_int;
+ 453   1        
+ 454   1        for(;bit_val;bit_val--)
+ 455   1          float_val = float_val * 10;
+ 456   1        
+ 457   1        serial_one_send_number(value_int);
+ 458   1        SendData('.');
+ 459   1        serial_one_send_number((long)float_val);
+ 460   1      }
+ 461          
+ 462          
+ 463          /*uartÖĞ¶Ï·şÎñ³ÌĞò*/
+ 464          void Uart() interrupt 4
+ 465          {
+ 466   1          if (RI)
+ 467   1          {
+ 468   2              RI = 0;                 //Çå³ıRIÎ»
+ 469   2              P0 = SBUF;              //P0ÏÔÊ¾´®¿ÚÊı¾İ
+ 470   2              P54 = RB8;              //P2.2ÏÔÊ¾Ğ£ÑéÎ»
+ 471   2          }
+ 472   1          if (TI)
+ 473   1          {
+ 474   2              TI = 0;                 //Çå³ıTIÎ»
+ 475   2              busy = 0;               //ÇåÃ¦±êÖ¾
+ 476   2          }
+ 477   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    456    ----
-   CONSTANT SIZE    =     42    ----
-   XDATA SIZE       =   ----    ----
+   CODE SIZE        =   1882    ----
+   CONSTANT SIZE    =    114    ----
+   XDATA SIZE       =   ----      16
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =      1       3
+   DATA SIZE        =      4      24
    IDATA SIZE       =   ----    ----
    BIT SIZE         =      1       2
 END OF MODULE INFORMATION.
+
+C51 COMPILER V9.59.0.0   MAIN                                                              07/30/2020 22:25:52 PAGE 9   
 
 
 C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
