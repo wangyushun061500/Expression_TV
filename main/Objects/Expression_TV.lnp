@@ -1,0 +1,3 @@
+".\Objects\Expression_TV.obj" 
+TO ".\Objects\Expression_TV" 
+PRINT(".\Listings\Expression_TV.m51") RAMSIZE(256) 
