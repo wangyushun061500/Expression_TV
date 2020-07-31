@@ -1,4 +1,4 @@
-C51 COMPILER V9.59.0.0   MPU6050                                                           07/31/2020 09:11:11 PAGE 1   
+C51 COMPILER V9.59.0.0   MPU6050                                                           07/31/2020 09:42:39 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MPU6050
@@ -11,200 +11,199 @@ line level    source
    1          #include "mpu6050.h"
    2          #include "config.h"
    3          #include "uart.h"
-   4          
-   5          /*mpu6050初始化函数*/
-   6          void mpu6050_init ()
-   7          {
-   8   1        // 配置IO输出模式
-   9   1        P2M0 = 0x01;
-  10   1        P2M1 = 0x00;
-  11   1        //配置电源电平
-  12   1        Vcc = 1;
-  13   1        Gnd = 0;
-  14   1        //配置mpu6050地址，ad0为设置最低位地址设置
-  15   1        Int = 0;
-  16   1        //初始化寄存器
-  17   1        Delay1000ms();
-*** WARNING C206 IN LINE 17 OF mpu6050.c: 'Delay1000ms': missing function-prototype
-  18   1        Single_WriteI2C(PWR_MGMT_1, 0x00);  //解除休眠状态
-  19   1        Single_WriteI2C(SMPLRT_DIV, 0x07);
-  20   1        Single_WriteI2C(CONFIG, 0x06);
-  21   1        Single_WriteI2C(GYRO_CONFIG, 0x18);
-  22   1        Single_WriteI2C(ACCEL_CONFIG, 0x01);
-  23   1        SendString("Init Done!\r\n");
-  24   1      }
-  25          
-  26          /*I2C开始信号*/
-  27          void I2C_Start()
-  28          {
-  29   1          Sda = 1;                    //拉高数据线
-  30   1          Scl = 1;                    //拉高时钟线
-  31   1          Delay5us();                 //延时
-*** WARNING C206 IN LINE 31 OF mpu6050.c: 'Delay5us': missing function-prototype
-  32   1          Sda = 0;                    //产生下降沿
-  33   1          Delay5us();                 //延时
-  34   1          Scl = 0;                    //拉低时钟线
-  35   1      }
-  36          
-  37          /*I2C停止信号*/
-  38          void I2C_Stop()
-  39          {
-  40   1          Sda = 0;                    //拉低数据线
-  41   1          Scl = 1;                    //拉高时钟线
-  42   1          Delay5us();                 //延时
-  43   1          Sda = 1;                    //产生上升沿
-  44   1          Delay5us();                 //延时
-  45   1      }
-  46          
-  47          /*I2C发送应答信号*/
-  48          void I2C_SendACK(bit ack)
-  49          {
-  50   1          Sda = ack;                  //写应答信号
-  51   1          Scl = 1;                    //拉高时钟线
-  52   1          Delay5us();                 //延时
-C51 COMPILER V9.59.0.0   MPU6050                                                           07/31/2020 09:11:11 PAGE 2   
+   4          #include "delay.h"
+   5          
+   6          /*mpu6050初始化函数*/
+   7          void mpu6050_init ()
+   8          {
+   9   1        // 配置IO输出模式
+  10   1        P2M0 = 0x01;
+  11   1        P2M1 = 0x00;
+  12   1        //配置电源电平
+  13   1        MPU_6050_Vcc = 1;
+  14   1        MPU_6050_Gnd = 0;
+  15   1        //配置mpu6050地址，ad0为设置最低位地址设置
+  16   1        Int = 0;
+  17   1        //初始化寄存器
+  18   1        Delay1000ms();
+  19   1        Single_WriteI2C(PWR_MGMT_1, 0x00);  //解除休眠状态
+  20   1        Single_WriteI2C(SMPLRT_DIV, 0x07);
+  21   1        Single_WriteI2C(CONFIG, 0x06);
+  22   1        Single_WriteI2C(GYRO_CONFIG, 0x18);
+  23   1        Single_WriteI2C(ACCEL_CONFIG, 0x01);
+  24   1        SendString("Init Done!\r\n");
+  25   1      }
+  26          
+  27          /*I2C开始信号*/
+  28          void I2C_Start()
+  29          {
+  30   1          Sda = 1;                    //拉高数据线
+  31   1          Scl = 1;                    //拉高时钟线
+  32   1          Delay5us();                 //延时
+  33   1          Sda = 0;                    //产生下降沿
+  34   1          Delay5us();                 //延时
+  35   1          Scl = 0;                    //拉低时钟线
+  36   1      }
+  37          
+  38          /*I2C停止信号*/
+  39          void I2C_Stop()
+  40          {
+  41   1          Sda = 0;                    //拉低数据线
+  42   1          Scl = 1;                    //拉高时钟线
+  43   1          Delay5us();                 //延时
+  44   1          Sda = 1;                    //产生上升沿
+  45   1          Delay5us();                 //延时
+  46   1      }
+  47          
+  48          /*I2C发送应答信号*/
+  49          void I2C_SendACK(bit ack)
+  50          {
+  51   1          Sda = ack;                  //写应答信号
+  52   1          Scl = 1;                    //拉高时钟线
+  53   1          Delay5us();                 //延时
+  54   1          Scl = 0;                    //拉低时钟线
+C51 COMPILER V9.59.0.0   MPU6050                                                           07/31/2020 09:42:39 PAGE 2   
 
-  53   1          Scl = 0;                    //拉低时钟线
-  54   1          Delay5us();                 //延时
-  55   1      }
-  56          
-  57          /*I2C接收应答信号*/
-  58          bit I2C_RecvACK()
-  59          {
-  60   1        bit ack;
-  61   1          Scl = 1;                    //拉高时钟线
-  62   1          Delay5us();                 //延时
-  63   1          ack = Sda;                   //读应答信号
-  64   1          Scl = 0;                    //拉低时钟线
-  65   1          Delay5us();                 //延时
-  66   1          return ack;
-  67   1      }
-  68          
-  69          /*I2C发送一个字节数据*/
-  70          void I2C_SendByte(unsigned char dat)
-  71          {
-  72   1          unsigned char i;
-  73   1          for (i=0; i<8; i++)         //8位计数器
-  74   1          {
-  75   2              dat = dat << 1;         //移出数据的最高位
-  76   2              Sda = CY;               //送数据口
-  77   2              Scl = 1;                //拉高时钟线
-  78   2              Delay5us();             //延时
-  79   2              Scl = 0;                //拉低时钟线
-  80   2              Delay5us();             //延时
-  81   2          }
-  82   1           while(I2C_RecvACK());
-  83   1      }
-  84          
-  85          /*I2C接收一个字节数据*/
-  86          unsigned char I2C_RecvByte()
-  87          {
-  88   1          unsigned char i;
-  89   1          unsigned char dat = 0;
-  90   1          Sda = 1;                    //使能内部上拉,准备读取数据,
-  91   1          for (i=0; i<8; i++)         //8位计数器
-  92   1          {
-  93   2              dat = dat << 1;
-  94   2              Scl = 1;                //拉高时钟线
-  95   2              Delay5us();             //延时
-  96   2              dat |= Sda;             //读数据               
-  97   2              Scl = 0;                //拉低时钟线
-  98   2              Delay5us();             //延时
-  99   2          }
- 100   1          return dat;
- 101   1      }
- 102          
- 103          /*I2C写入一个字节数据*/
- 104          void Single_WriteI2C(unsigned char REG_Address,unsigned char REG_data)
- 105          {
- 106   1          I2C_Start();                  //起始信号
- 107   1          I2C_SendByte(SlaveAddress);   //发送设备地址+写信号
- 108   1          I2C_SendByte(REG_Address);    //内部寄存器地址，
- 109   1          I2C_SendByte(REG_data);       //内部寄存器数据，
- 110   1          I2C_Stop();                   //发送停止信号
- 111   1      }
- 112          
- 113          /*从I2C设备读取一个字节数据*/
- 114          unsigned char Single_ReadI2C(unsigned char REG_Address)
-C51 COMPILER V9.59.0.0   MPU6050                                                           07/31/2020 09:11:11 PAGE 3   
+  55   1          Delay5us();                 //延时
+  56   1      }
+  57          
+  58          /*I2C接收应答信号*/
+  59          bit I2C_RecvACK()
+  60          {
+  61   1        bit ack;
+  62   1          Scl = 1;                    //拉高时钟线
+  63   1          Delay5us();                 //延时
+  64   1          ack = Sda;                   //读应答信号
+  65   1          Scl = 0;                    //拉低时钟线
+  66   1          Delay5us();                 //延时
+  67   1          return ack;
+  68   1      }
+  69          
+  70          /*I2C发送一个字节数据*/
+  71          void I2C_SendByte(unsigned char dat)
+  72          {
+  73   1          unsigned char i;
+  74   1          for (i=0; i<8; i++)         //8位计数器
+  75   1          {
+  76   2              dat = dat << 1;         //移出数据的最高位
+  77   2              Sda = CY;               //送数据口
+  78   2              Scl = 1;                //拉高时钟线
+  79   2              Delay5us();             //延时
+  80   2              Scl = 0;                //拉低时钟线
+  81   2              Delay5us();             //延时
+  82   2          }
+  83   1           while(I2C_RecvACK());
+  84   1      }
+  85          
+  86          /*I2C接收一个字节数据*/
+  87          unsigned char I2C_RecvByte()
+  88          {
+  89   1          unsigned char i;
+  90   1          unsigned char dat = 0;
+  91   1          Sda = 1;                    //使能内部上拉,准备读取数据,
+  92   1          for (i=0; i<8; i++)         //8位计数器
+  93   1          {
+  94   2              dat = dat << 1;
+  95   2              Scl = 1;                //拉高时钟线
+  96   2              Delay5us();             //延时
+  97   2              dat |= Sda;             //读数据               
+  98   2              Scl = 0;                //拉低时钟线
+  99   2              Delay5us();             //延时
+ 100   2          }
+ 101   1          return dat;
+ 102   1      }
+ 103          
+ 104          /*I2C写入一个字节数据*/
+ 105          void Single_WriteI2C(unsigned char REG_Address,unsigned char REG_data)
+ 106          {
+ 107   1          I2C_Start();                  //起始信号
+ 108   1          I2C_SendByte(SlaveAddress);   //发送设备地址+写信号
+ 109   1          I2C_SendByte(REG_Address);    //内部寄存器地址，
+ 110   1          I2C_SendByte(REG_data);       //内部寄存器数据，
+ 111   1          I2C_Stop();                   //发送停止信号
+ 112   1      }
+ 113          
+ 114          /*从I2C设备读取一个字节数据*/
+ 115          unsigned char Single_ReadI2C(unsigned char REG_Address)
+ 116          {
+C51 COMPILER V9.59.0.0   MPU6050                                                           07/31/2020 09:42:39 PAGE 3   
 
- 115          {
- 116   1        unsigned char REG_data;
- 117   1        I2C_Start();                   //起始信号
- 118   1        I2C_SendByte(SlaveAddress);    //发送设备地址+写信号
- 119   1        I2C_SendByte(REG_Address);     //发送存储单元地址，从0开始  
- 120   1        I2C_Start();                   //起始信号
- 121   1        I2C_SendByte(SlaveAddress+1);  //发送设备地址+读信号
- 122   1        REG_data=I2C_RecvByte();       //读出寄存器数据
- 123   1        I2C_SendACK(1);                //接收应答信号
- 124   1        I2C_Stop();                    //停止信号
- 125   1        return REG_data;
- 126   1      }
- 127          
- 128          /*数据融合算法*/
- 129          int GetData(unsigned char REG_Address)
- 130          {
- 131   1        unsigned char H,L;
- 132   1        H=Single_ReadI2C(REG_Address);
- 133   1        L=Single_ReadI2C(REG_Address+1);
- 134   1        return (H<<8)+L;   //合成数据
- 135   1      }
- 136          
- 137          /*获取角速度或者加速度*/
- 138          int Get_Gyro_Data(unsigned char gyro_id)
- 139          {
- 140   1        switch(gyro_id)
- 141   1        {
- 142   2          case 1: return GetData(ACCEL_XOUT_H); break;
- 143   2          case 2: return GetData(ACCEL_YOUT_H); break;
- 144   2          case 3: return GetData(ACCEL_ZOUT_H); break;
- 145   2          case 4: return GetData(GYRO_XOUT_H) ; break;
- 146   2          case 5: return GetData(GYRO_YOUT_H) ; break;
- 147   2          case 6: return GetData(GYRO_ZOUT_H) ; break;
- 148   2        }
- 149   1        return 0;
- 150   1      }
- 151          
- 152          /*转换夹角*/
- 153          int MPU6050_Get_Angle(int x,int y,int z,unsigned char dir)
- 154          {
- 155   1        float xdata temp;
- 156   1        float xdata res = 0;
- 157   1        switch(dir)
- 158   1        {
- 159   2          case 0://与z轴的夹角
- 160   2              temp = sqrt(((float)x*(float)x+(float)y*(float)y))/(float)z;
- 161   2              res  = atan(temp);
- 162   2          break;
- 163   2          case 1://与x轴的夹角
- 164   2              temp = (float)x/sqrt(((float)y*(float)y+(float)z*(float)z));
- 165   2              res  = atan(temp);
- 166   2          break;
- 167   2          case 2://与y轴的夹角
- 168   2              temp = (float)y/sqrt(((float)x*(float)x+(float)z*(float)z));
- 169   2              res  = atan(temp);
- 170   2          break;
- 171   2        }
- 172   1        return (int)(res*1800/3.1416);//弧度转换为角度,扩大10倍
- 173   1      }
- 174          
- 175          /*数值处理*/
- 176          int MPU6050_Get_Data(unsigned angle_id)
-C51 COMPILER V9.59.0.0   MPU6050                                                           07/31/2020 09:11:11 PAGE 4   
+ 117   1        unsigned char REG_data;
+ 118   1        I2C_Start();                   //起始信号
+ 119   1        I2C_SendByte(SlaveAddress);    //发送设备地址+写信号
+ 120   1        I2C_SendByte(REG_Address);     //发送存储单元地址，从0开始  
+ 121   1        I2C_Start();                   //起始信号
+ 122   1        I2C_SendByte(SlaveAddress+1);  //发送设备地址+读信号
+ 123   1        REG_data=I2C_RecvByte();       //读出寄存器数据
+ 124   1        I2C_SendACK(1);                //接收应答信号
+ 125   1        I2C_Stop();                    //停止信号
+ 126   1        return REG_data;
+ 127   1      }
+ 128          
+ 129          /*数据融合算法*/
+ 130          int GetData(unsigned char REG_Address)
+ 131          {
+ 132   1        unsigned char H,L;
+ 133   1        H=Single_ReadI2C(REG_Address);
+ 134   1        L=Single_ReadI2C(REG_Address+1);
+ 135   1        return (H<<8)+L;   //合成数据
+ 136   1      }
+ 137          
+ 138          /*获取角速度或者加速度*/
+ 139          int Get_Gyro_Data(unsigned char gyro_id)
+ 140          {
+ 141   1        switch(gyro_id)
+ 142   1        {
+ 143   2          case 1: return GetData(ACCEL_XOUT_H); break;
+ 144   2          case 2: return GetData(ACCEL_YOUT_H); break;
+ 145   2          case 3: return GetData(ACCEL_ZOUT_H); break;
+ 146   2          case 4: return GetData(GYRO_XOUT_H) ; break;
+ 147   2          case 5: return GetData(GYRO_YOUT_H) ; break;
+ 148   2          case 6: return GetData(GYRO_ZOUT_H) ; break;
+ 149   2        }
+ 150   1        return 0;
+ 151   1      }
+ 152          
+ 153          /*转换夹角*/
+ 154          int MPU6050_Get_Angle(int x,int y,int z,unsigned char dir)
+ 155          {
+ 156   1        float xdata temp;
+ 157   1        float xdata res = 0;
+ 158   1        switch(dir)
+ 159   1        {
+ 160   2          case 0://与z轴的夹角
+ 161   2              temp = sqrt(((float)x*(float)x+(float)y*(float)y))/(float)z;
+ 162   2              res  = atan(temp);
+ 163   2          break;
+ 164   2          case 1://与x轴的夹角
+ 165   2              temp = (float)x/sqrt(((float)y*(float)y+(float)z*(float)z));
+ 166   2              res  = atan(temp);
+ 167   2          break;
+ 168   2          case 2://与y轴的夹角
+ 169   2              temp = (float)y/sqrt(((float)x*(float)x+(float)z*(float)z));
+ 170   2              res  = atan(temp);
+ 171   2          break;
+ 172   2        }
+ 173   1        return (int)(res*1800/3.1416);//弧度转换为角度,扩大10倍
+ 174   1      }
+ 175          
+ 176          /*数值处理*/
+ 177          int MPU6050_Get_Data(unsigned angle_id)
+ 178          {
+C51 COMPILER V9.59.0.0   MPU6050                                                           07/31/2020 09:42:39 PAGE 4   
 
- 177          {
- 178   1        switch(angle_id)
- 179   1        {
- 180   2          case 1:return MPU6050_Get_Angle( Get_Gyro_Data(1), Get_Gyro_Data(2), Get_Gyro_Data(3), 1);break;
- 181   2          case 2:return MPU6050_Get_Angle( Get_Gyro_Data(1), Get_Gyro_Data(2), Get_Gyro_Data(3), 2);break;
- 182   2          case 3:return MPU6050_Get_Angle( Get_Gyro_Data(1), Get_Gyro_Data(2), Get_Gyro_Data(3), 0);break;
- 183   2          case 4:return (int)((float)((float)Get_Gyro_Data(4)/16384)*9.8*100);
- 184   2          case 5:return (int)((float)((float)Get_Gyro_Data(5)/16384)*9.8*100);
- 185   2          case 6:return (int)((float)((float)Get_Gyro_Data(6)/16384)*9.8*100);
- 186   2          case 7:return (int)((float)((float)((float)GetData(TEMP_OUT_H)/340)+36.53)*100);
- 187   2        }
- 188   1        return 0;
- 189   1      }
+ 179   1        switch(angle_id)
+ 180   1        {
+ 181   2          case 1:return MPU6050_Get_Angle( Get_Gyro_Data(1), Get_Gyro_Data(2), Get_Gyro_Data(3), 1);break;
+ 182   2          case 2:return MPU6050_Get_Angle( Get_Gyro_Data(1), Get_Gyro_Data(2), Get_Gyro_Data(3), 2);break;
+ 183   2          case 3:return MPU6050_Get_Angle( Get_Gyro_Data(1), Get_Gyro_Data(2), Get_Gyro_Data(3), 0);break;
+ 184   2          case 4:return (int)((float)((float)Get_Gyro_Data(4)/16384)*9.8*100);
+ 185   2          case 5:return (int)((float)((float)Get_Gyro_Data(5)/16384)*9.8*100);
+ 186   2          case 6:return (int)((float)((float)Get_Gyro_Data(6)/16384)*9.8*100);
+ 187   2          case 7:return (int)((float)((float)((float)GetData(TEMP_OUT_H)/340)+36.53)*100);
+ 188   2        }
+ 189   1        return 0;
+ 190   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
@@ -218,4 +217,4 @@ MODULE INFORMATION:   STATIC OVERLAYABLE
 END OF MODULE INFORMATION.
 
 
-C51 COMPILATION COMPLETE.  2 WARNING(S),  0 ERROR(S)
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

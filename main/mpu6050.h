@@ -3,7 +3,7 @@
 
 /* 函数声明 */
 
-void mpu6050_init();
+void mpu6050_init ();
 void  I2C_Start();
 void  I2C_Stop();
 void  I2C_SendACK(bit ack);

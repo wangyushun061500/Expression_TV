@@ -1,4 +1,4 @@
-C51 COMPILER V9.59.0.0   EXPRESSION_TV                                                     07/31/2020 09:11:45 PAGE 1   
+C51 COMPILER V9.59.0.0   EXPRESSION_TV                                                     07/31/2020 10:25:07 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE EXPRESSION_TV
@@ -10,141 +10,257 @@ line level    source
 
    1          #include "config.h"
    2          #include "15w.h"
-   3          #include "uart.h"
-   4          #include "mpu6050.h"
-   5          #include "oled.h"
-   6          
-   7          // 引用其他文件的变量
+   3          #include "delay.h"
+   4          #include "uart.h"
+   5          #include "mpu6050.h"
+   6          #include "oled.h"
+   7          #include "bmp.h"
    8          
-   9          extern bit busy;   
+   9          // 引用其他文件的变量
   10          
-  11          //声明本文件变量
+  11          extern bit busy;   
   12          
-  13          float value = 0;        /* mpu6050数据输出存储器 */
-  14          // 提前声明函数
-  15          
-  16          void Delay5us();
-  17          void Delay1000ms();
-  18          
-  19          void main(void)
-  20          {
-  21   1          uart_init();
-  22   1          Delay1000ms();
-  23   1          SendString("STC15F2K60S2\r\nUart ON !\r\n");
-  24   1          mpu6050_init();
-  25   1        while (1)
-  26   1          {
-  27   2              value = MPU6050_Get_Data(1);          //获取与x轴的夹角，角度被放大10倍
-  28   2          SendString("x轴的夹角：");
-  29   2          Delay5us();
-  30   2          serial_one_send_float(value / 10,1);      //角度除以10，并从串口发出,第二个参数为保留一位小数
-  31   2          Delay5us();
-  32   2          SendString("\r\n");               //换行
-  33   2          
-  34   2          value = MPU6050_Get_Data(2);          //获取与y轴的夹角，角度被放大10倍
-  35   2          SendString("y轴的夹角：");
-  36   2          Delay5us();
-  37   2          serial_one_send_float(value / 10,1);      //角度除以10，并从串口发出
-  38   2          Delay5us();
-  39   2          SendString("\r\n");               //换行
-  40   2          
-  41   2          value = MPU6050_Get_Data(3);          //获取与z轴的夹角，角度被放大10倍
-  42   2          SendString("z轴的夹角：");
-  43   2          Delay5us();
-  44   2          serial_one_send_float(value / 10,1);      //角度除以10，并从串口发出
-  45   2          Delay5us();
-  46   2          SendString("\r\n");               //换行
-  47   2          
-  48   2          value = MPU6050_Get_Data(4);          //获取与x轴加速度，数值被放大100倍
-  49   2          SendString("x轴加速度：");
-  50   2          Delay5us();
-  51   2          serial_one_send_float(value/100,1);       //角度除以100，并从串口发出，第二个参数为保留一位小数
-  52   2          Delay5us();
-  53   2          SendString("\r\n");               //换行
-  54   2          
-C51 COMPILER V9.59.0.0   EXPRESSION_TV                                                     07/31/2020 09:11:45 PAGE 2   
+  13          //声明本文件变量
+  14          unsigned char count;
+  15          data unsigned char ss = 0,mm = 14,      //初始化分钟和秒
+  16          hh = 13,dd = 20,                        //初始化小时和天
+  17          nn = 5,yy = 20;                         //初始化年份和月份
+  18          float value = 0;                        /* mpu6050数据输出存储器 */
+  19          // 提前声明函数
+  20          void Timer0Init(void);
+  21          
+  22          void main(void)
+  23          {
+  24   1          unsigned char i;
+  25   1          uart_init();
+  26   1          Delay1000ms();
+  27   1          SendString("STC15F2K60S2\r\nUart ON !\r\n");
+  28   1          mpu6050_init();
+  29   1          Timer0Init();
+  30   1      
+  31   1          OLED_Init();
+  32   1          SendString("OLED-Init Yes !\r\n");
+  33   1          OLED_Clear(); 
+  34   1          SendString("OLED-Clear Yes !\r\n");
+  35   1          for(i=6; i>0; i--)                              //开启动画，循环六次
+  36   1          {
+  37   2          OLED_DrawBMP(0,0,128,8,BMP1);
+  38   2          delay_ms(200);
+  39   2          OLED_DrawBMP(0,0,128,8,BMP2);
+  40   2          delay_ms(200);
+  41   2        }
+  42   1        OLED_Clear();                                   //初始化清屏一次
+  43   1          value = MPU6050_Get_Data(1);          //获取与x轴的夹角，角度被放大10倍
+  44   1          SendString("x轴的夹角：");
+  45   1          Delay5us();
+  46   1          serial_one_send_float(value / 10,1);      //角度除以10，并从串口发出,第二个参数为保留一位小数
+  47   1          Delay5us();
+  48   1          SendString("\r\n");               //换行
+  49   1          
+  50   1          value = MPU6050_Get_Data(2);          //获取与y轴的夹角，角度被放大10倍
+  51   1          SendString("y轴的夹角：");
+  52   1          Delay5us();
+  53   1          serial_one_send_float(value / 10,1);      //角度除以10，并从串口发出
+  54   1          Delay5us();
+C51 COMPILER V9.59.0.0   EXPRESSION_TV                                                     07/31/2020 10:25:07 PAGE 2   
 
-  55   2          value = MPU6050_Get_Data(5);          //获取与y轴加速度，数值被放大100倍
-  56   2          SendString("y轴加速度：");
-  57   2          Delay5us();
-  58   2          serial_one_send_float(value / 100,1);     //角度除以100，并从串口发出
-  59   2          Delay5us();
-  60   2          SendString("\r\n");               //换行
-  61   2          
-  62   2          value = MPU6050_Get_Data(6);          //获取与z轴加速度，数值被放大100倍
-  63   2          SendString("z轴加速度：");
-  64   2          Delay5us();
-  65   2          serial_one_send_float(value / 100,1);     //角度除以100，并从串口发出
-  66   2          Delay5us();
-  67   2          SendString("\r\n");               //换行
-  68   2      
-  69   2          value = MPU6050_Get_Data(7);          //获取与温度
-  70   2          SendString("当前温度为：");
-  71   2          Delay5us();
-  72   2          serial_one_send_float(value / 100,1);     //角度除以100，并从串口发出
-  73   2          Delay5us();
-  74   2          SendString("\r\n");               //换行
-  75   2          SendString("\r\n");               //换行
-  76   2          Delay1000ms();
-  77   2          }
-  78   1          
-  79   1      }
-  80          
-  81          /*延时5us函数*/
-  82          void Delay5us()   //@24.000MHz
-  83          {
-  84   1        unsigned char i;
-  85   1      
-  86   1        _nop_();
-  87   1        _nop_();
-  88   1        i = 27;
-  89   1        while (--i);
-  90   1      }
-  91          
-  92          /*延时1s函数*/
-  93          void Delay1000ms()    //@24.000MHz
-  94          {
-  95   1        unsigned char i, j, k;
-  96   1      
-  97   1        _nop_();
-  98   1        _nop_();
-  99   1        i = 92;
- 100   1        j = 50;
- 101   1        k = 238;
- 102   1        do
- 103   1        {
- 104   2          do
- 105   2          {
- 106   3            while (--k);
- 107   3          } while (--j);
- 108   2        } while (--i);
- 109   1      }
- 110          
- 111          /*uart中断服务程序*/
- 112          void Uart() interrupt 4
- 113          {
- 114   1          if (RI)
- 115   1          {
- 116   2              RI = 0;                 //清除RI位
-C51 COMPILER V9.59.0.0   EXPRESSION_TV                                                     07/31/2020 09:11:45 PAGE 3   
+  55   1          SendString("\r\n");               //换行
+  56   1          
+  57   1          value = MPU6050_Get_Data(3);          //获取与z轴的夹角，角度被放大10倍
+  58   1          SendString("z轴的夹角：");
+  59   1          Delay5us();
+  60   1          serial_one_send_float(value / 10,1);      //角度除以10，并从串口发出
+  61   1          Delay5us();
+  62   1          SendString("\r\n");               //换行
+  63   1          
+  64   1          value = MPU6050_Get_Data(4);          //获取与x轴加速度，数值被放大100倍
+  65   1          SendString("x轴加速度：");
+  66   1          Delay5us();
+  67   1          serial_one_send_float(value/100,1);       //角度除以100，并从串口发出，第二个参数为保留一位小数
+  68   1          Delay5us();
+  69   1          SendString("\r\n");               //换行
+  70   1          
+  71   1          value = MPU6050_Get_Data(5);          //获取与y轴加速度，数值被放大100倍
+  72   1          SendString("y轴加速度：");
+  73   1          Delay5us();
+  74   1          serial_one_send_float(value / 100,1);     //角度除以100，并从串口发出
+  75   1          Delay5us();
+  76   1          SendString("\r\n");               //换行
+  77   1          
+  78   1          value = MPU6050_Get_Data(6);          //获取与z轴加速度，数值被放大100倍
+  79   1          SendString("z轴加速度：");
+  80   1          Delay5us();
+  81   1          serial_one_send_float(value / 100,1);     //角度除以100，并从串口发出
+  82   1          Delay5us();
+  83   1          SendString("\r\n");               //换行
+  84   1      
+  85   1          value = MPU6050_Get_Data(7);          //获取与温度
+  86   1          SendString("当前温度为：");
+  87   1          Delay5us();
+  88   1          serial_one_send_float(value / 100,1);     //角度除以100，并从串口发出
+  89   1          Delay5us();
+  90   1          SendString("\r\n");               //换行
+  91   1          SendString("\r\n");               //换行
+  92   1          Delay1000ms();
+  93   1          count = 1;
+  94   1        while (1)
+  95   1          {
+  96   2              if(count == 0)
+  97   2              {
+  98   3                  OLED_ShowCHinese(0,0,0);                //王
+  99   3                  OLED_ShowCHinese(18,0,1);               //昱
+ 100   3                  OLED_ShowCHinese(36,0,2);               //顺
+ 101   3                  OLED_ShowCHinese(54,0,3);               //的
+ 102   3                  OLED_ShowCHinese(72,0,4);               //工
+ 103   3                  OLED_ShowCHinese(90,0,5);               //作
+ 104   3                  OLED_ShowCHinese(108,0,6);              //室
+ 105   3                  OLED_ShowString(10,2,"Hello world!");
+ 106   3                  OLED_ShowCHinese(0,4,7);                //日
+ 107   3                  OLED_ShowCHinese(16,4,8);               //期
+ 108   3                  OLED_ShowString(32,4,"-");
+ 109   3                  OLED_ShowNum(0+32+8,4,20,2,16);         //年份  
+ 110   3                  OLED_ShowNum(16+32+8,4,yy,2,16);        //年份
+ 111   3                  OLED_ShowString(32+32+8,4,"/");
+ 112   3                  OLED_ShowNum(40+32+8,4,nn,2,16);        //月份
+ 113   3                  OLED_ShowString(56+32+8,4,"/");
+ 114   3                  OLED_ShowNum(64+32+8,4,dd,2,16);        //天数
+ 115   3                  OLED_ShowCHinese(0,6,9);                //时
+ 116   3                  OLED_ShowCHinese(16,6,10);              //间
+C51 COMPILER V9.59.0.0   EXPRESSION_TV                                                     07/31/2020 10:25:07 PAGE 3   
 
- 117   2              P0 = SBUF;              //P0显示串口数据
- 118   2              P54 = RB8;              //P2.2显示校验位
- 119   2          }
- 120   1          if (TI)
- 121   1          {
- 122   2              TI = 0;                 //清除TI位
- 123   2              busy = 0;               //清忙标志
- 124   2          }
- 125   1      }
+ 117   3                  OLED_ShowString(32,6,"-");
+ 118   3                  OLED_ShowNum(0+32+8,6,hh,2,16);         //小时
+ 119   3                  OLED_ShowString(16+32+8,6,":");
+ 120   3                  OLED_ShowNum(24+32+8,6,mm,2,16);        //分钟
+ 121   3                  OLED_ShowString(40+32+8,6,":");
+ 122   3                  OLED_ShowNum(48+32+8,6,ss,2,16);        //秒
+ 123   3          }
+ 124   2              if(count == 1)
+ 125   2              {
+ 126   3                  OLED_DrawBMP(0,0,128,8,lan0);
+ 127   3            delay_ms(100);
+ 128   3            OLED_DrawBMP(0,0,128,8,lan1);
+ 129   3            delay_ms(150);
+ 130   3            OLED_DrawBMP(0,0,128,8,lan2);
+ 131   3            delay_ms(200);
+ 132   3            OLED_DrawBMP(0,0,128,8,lan1);
+ 133   3            delay_ms(100);
+ 134   3              }
+ 135   2              if(count == 2)
+ 136   2              {
+ 137   3                  for(i=4; i>0; i--)                              //开启动画，循环六次
+ 138   3                  {
+ 139   4                      OLED_DrawBMP(0,0,128,8,yun0);
+ 140   4                      delay_ms(100);
+ 141   4                      OLED_DrawBMP(0,0,128,8,yun1);
+ 142   4                      delay_ms(100);
+ 143   4                      OLED_DrawBMP(0,0,128,8,yun2);
+ 144   4                      delay_ms(100);
+ 145   4                      OLED_DrawBMP(0,0,128,8,yun3);
+ 146   4                      delay_ms(100);
+ 147   4                      OLED_DrawBMP(0,0,128,8,yun4);
+ 148   4                      delay_ms(100);
+ 149   4                      OLED_DrawBMP(0,0,128,8,yun5);
+ 150   4                      delay_ms(100); 
+ 151   4                  }
+ 152   3          }
+ 153   2              value = MPU6050_Get_Data(4);          //获取与x轴加速度，数值被放大100倍
+ 154   2              value = value/100;
+ 155   2              if(value >= 0.6){
+ 156   3                  count = 2;
+ 157   3              }
+ 158   2              else
+ 159   2              {
+ 160   3                  count = 1;   
+ 161   3              }
+ 162   2              
+ 163   2          }
+ 164   1          
+ 165   1      }
+ 166          
+ 167          /* t0初始化程序 */
+ 168          void Timer0Init(void)   //20毫秒@24.000MHz
+ 169          {
+ 170   1        AUXR &= 0x7F;   //定时器时钟12T模式
+ 171   1        TMOD &= 0xF0;   //设置定时器模式
+ 172   1        TL0 = 0xC0;       //设置定时初值
+ 173   1        TH0 = 0x63;       //设置定时初值
+ 174   1        TF0 = 0;        //清除TF0标志
+ 175   1        TR0 = 1;        //定时器0开始计时
+ 176   1          ET0 = 1;            //定时器0允许中断
+ 177   1      
+ 178   1      }
+C51 COMPILER V9.59.0.0   EXPRESSION_TV                                                     07/31/2020 10:25:07 PAGE 4   
+
+ 179          
+ 180          /* t0中断服务程序 */
+ 181          void timer0_isr (void) interrupt 1 {
+ 182   1        unsigned char mss;
+ 183   1        mss++;
+ 184   1        if(mss == 50){
+ 185   2          mss = 0;
+ 186   2          ss++;
+ 187   2          if(ss == 60){
+ 188   3            mm++;
+ 189   3            ss = 0;
+ 190   3            if(mm == 60){
+ 191   4              hh++;
+ 192   4              mm = 0;
+ 193   4              if(hh == 24){
+ 194   5                dd++;
+ 195   5                hh = 0;
+ 196   5                if(dd > 28){
+ 197   6                  if(nn == 2){
+ 198   7                    nn++;
+ 199   7                    dd = 1;
+ 200   7                  }
+ 201   6                }
+ 202   5                if(dd > 30){
+ 203   6                  if(nn==4 || nn==6 || nn==9 || nn==11){
+ 204   7                    nn++;
+ 205   7                    dd = 1;
+ 206   7                  }else{
+ 207   7                    if(dd > 31){
+ 208   8                      nn++;
+ 209   8                      dd = 1;
+ 210   8                    }
+ 211   7                  }
+ 212   6                }
+ 213   5                if(nn == 12){
+ 214   6                  nn = 1;
+ 215   6                  yy++;
+ 216   6                }
+ 217   5              }
+ 218   4            }
+ 219   3          }
+ 220   2        }     
+ 221   1      }
+ 222          
+ 223          /*uart中断服务程序*/
+ 224          void Uart() interrupt 4
+ 225          {
+ 226   1          if (RI)
+ 227   1          {
+ 228   2              RI = 0;                 //清除RI位
+ 229   2              P0 = SBUF;              //P0显示串口数据
+ 230   2              P54 = RB8;              //P2.2显示校验位
+ 231   2          }
+ 232   1          if (TI)
+ 233   1          {
+ 234   2              TI = 0;                 //清除TI位
+ 235   2              busy = 0;               //清忙标志
+ 236   2          }
+ 237   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    576    ----
-   CONSTANT SIZE    =    114    ----
+C51 COMPILER V9.59.0.0   EXPRESSION_TV                                                     07/31/2020 10:25:07 PAGE 5   
+
+   CODE SIZE        =   1527    ----
+   CONSTANT SIZE    =  15530    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =      4    ----
+   DATA SIZE        =     11       2
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
 END OF MODULE INFORMATION.

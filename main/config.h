@@ -17,8 +17,8 @@
 #define OLED_SCL P10        //时钟 D0
 // 声明元器件管脚
 
-#define Vcc P20		//电源正极
-#define Gnd P21		//电源负极
+#define MPU_6050_Vcc P20		//电源正极
+#define MPU_6050_Gnd P21		//电源负极
 #define Scl P22		//I2C时钟线
 #define Sda P23		//I2C数据线
 #define Xda P24		//外接I2C数据线

@@ -1,6 +1,7 @@
 #include "mpu6050.h"
 #include "config.h"
 #include "uart.h"
+#include "delay.h"
 
 /*mpu6050初始化函数*/
 void mpu6050_init ()
@@ -9,8 +10,8 @@ void mpu6050_init ()
 	P2M0 = 0x01;
 	P2M1 = 0x00;
 	//配置电源电平
-	Vcc = 1;
-	Gnd = 0;
+	MPU_6050_Vcc = 1;
+	MPU_6050_Gnd = 0;
 	//配置mpu6050地址，ad0为设置最低位地址设置
 	Int = 0;
 	//初始化寄存器

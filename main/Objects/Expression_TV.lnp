@@ -1,6 +1,7 @@
 ".\Objects\Expression_TV.obj",
 ".\Objects\mpu6050.obj",
 ".\Objects\uart.obj",
-".\Objects\oled.obj" 
+".\Objects\oled.obj",
+".\Objects\delay.obj" 
 TO ".\Objects\Expression_TV" 
 PRINT(".\Listings\Expression_TV.m51") RAMSIZE(256) 

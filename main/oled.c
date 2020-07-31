@@ -2,16 +2,16 @@
 #include "oled.h"
 #include "oledfont.h"  	 
 
-//OLED的显存
-//存放格式如下.
-//[0]0 1 2 3 ... 127	
-//[1]0 1 2 3 ... 127	
-//[2]0 1 2 3 ... 127	
-//[3]0 1 2 3 ... 127	
-//[4]0 1 2 3 ... 127	
-//[5]0 1 2 3 ... 127	
-//[6]0 1 2 3 ... 127	
-//[7]0 1 2 3 ... 127 			   
+/* OLED的显存
+存放格式如下.
+[0]0 1 2 3 ... 127	
+[1]0 1 2 3 ... 127	
+[2]0 1 2 3 ... 127	
+[3]0 1 2 3 ... 127	
+[4]0 1 2 3 ... 127	
+[5]0 1 2 3 ... 127	
+[6]0 1 2 3 ... 127	
+[7]0 1 2 3 ... 127  */			   
 void delay_ms(unsigned int ms)
 {                         
 	unsigned int a;
@@ -210,10 +210,11 @@ void OLED_DrawBMP(unsigned char x0, unsigned char y0,unsigned char x1, unsigned 
 //初始化SSD1306					    
 void OLED_Init(void)
 {
- 
-
- 
-  OLED_RST_Set();
+	P1M0 = 0x06;
+	P1M1 = 0x00;
+	OLED_Vcc = 1;
+	OLED_Gnd = 0;
+ 	OLED_RST_Set();
 	delay_ms(100);
 	OLED_RST_Clr();
 	delay_ms(100);

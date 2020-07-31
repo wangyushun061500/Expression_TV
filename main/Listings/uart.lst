@@ -1,4 +1,4 @@
-C51 COMPILER V9.59.0.0   UART                                                              07/31/2020 09:07:19 PAGE 1   
+C51 COMPILER V9.59.0.0   UART                                                              07/31/2020 09:34:07 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE UART
@@ -62,7 +62,7 @@ line level    source
   52   1          SBUF = ACC;                 //写数据到UART数据寄存器
   53   1      }
   54          
-C51 COMPILER V9.59.0.0   UART                                                              07/31/2020 09:07:19 PAGE 2   
+C51 COMPILER V9.59.0.0   UART                                                              07/31/2020 09:34:07 PAGE 2   
 
   55          /*发送字符串*/
   56          void SendString(char *s)
@@ -126,7 +126,7 @@ line level    source
  114   1        serial_one_send_number(value_int);
  115   1        SendData('.');
  116   1        serial_one_send_number((long)float_val);
-C51 COMPILER V9.59.0.0   UART                                                              07/31/2020 09:07:19 PAGE 3   
+C51 COMPILER V9.59.0.0   UART                                                              07/31/2020 09:34:07 PAGE 3   
 
  117   1      }
 
