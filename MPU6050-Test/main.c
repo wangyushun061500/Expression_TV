@@ -407,7 +407,7 @@ int MPU6050_Get_Data(unsigned angle_id)
 		case 4:return (int)((float)((float)Get_Gyro_Data(4)/16384)*9.8*100);
 		case 5:return (int)((float)((float)Get_Gyro_Data(5)/16384)*9.8*100);
 		case 6:return (int)((float)((float)Get_Gyro_Data(6)/16384)*9.8*100);
-		case 7:return (int)(((float)((float)GetData(TEMP_OUT_H)/340)+36.53)*100);
+		case 7:return (int)((float)((float)((float)GetData(TEMP_OUT_H)/340)+36.53)*100);
 	}
 	return 0;
 }

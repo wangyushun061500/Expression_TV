@@ -1,4 +1,4 @@
-C51 COMPILER V9.59.0.0   MAIN                                                              07/31/2020 07:55:37 PAGE 1   
+C51 COMPILER V9.59.0.0   MAIN                                                              07/31/2020 08:06:23 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MAIN
@@ -62,7 +62,7 @@ line level    source
   52          // 变量声明
   53          
   54          bit busy;
-C51 COMPILER V9.59.0.0   MAIN                                                              07/31/2020 07:55:37 PAGE 2   
+C51 COMPILER V9.59.0.0   MAIN                                                              07/31/2020 08:06:23 PAGE 2   
 
   55          float value = 0;
   56          
@@ -126,7 +126,7 @@ line level    source
  114   2          SendString("\r\n");               //换行
  115   2          
  116   2          value = MPU6050_Get_Data(4);          //获取与x轴加速度，数值被放大100倍
-C51 COMPILER V9.59.0.0   MAIN                                                              07/31/2020 07:55:37 PAGE 3   
+C51 COMPILER V9.59.0.0   MAIN                                                              07/31/2020 08:06:23 PAGE 3   
 
  117   2          SendString("x轴加速度：");
  118   2          Delay5us();
@@ -190,7 +190,7 @@ line level    source
  176   1          P_SW1 = ACC;                //(P3.0/RxD, P3.1/TxD)
  177   1        #if (PARITYBIT == NONE_PARITY)
  178   1          SCON = 0x50;                //8位可变波特率
-C51 COMPILER V9.59.0.0   MAIN                                                              07/31/2020 07:55:37 PAGE 4   
+C51 COMPILER V9.59.0.0   MAIN                                                              07/31/2020 08:06:23 PAGE 4   
 
  179   1        #elif (PARITYBIT == ODD_PARITY) || (PARITYBIT == EVEN_PARITY) || (PARITYBIT == MARK_PARITY)
                   SCON = 0xda;                //9位可变波特率,校验位初始为1
@@ -254,7 +254,7 @@ line level    source
  238   1          SBUF = ACC;                 //写数据到UART数据寄存器
  239   1      }
  240          
-C51 COMPILER V9.59.0.0   MAIN                                                              07/31/2020 07:55:37 PAGE 5   
+C51 COMPILER V9.59.0.0   MAIN                                                              07/31/2020 08:06:23 PAGE 5   
 
  241          /*发送字符串*/
  242          void SendString(char *s)
@@ -318,7 +318,7 @@ line level    source
  300   2              Sda = CY;               //送数据口
  301   2              Scl = 1;                //拉高时钟线
  302   2              Delay5us();             //延时
-C51 COMPILER V9.59.0.0   MAIN                                                              07/31/2020 07:55:37 PAGE 6   
+C51 COMPILER V9.59.0.0   MAIN                                                              07/31/2020 08:06:23 PAGE 6   
 
  303   2              Scl = 0;                //拉低时钟线
  304   2              Delay5us();             //延时
@@ -382,7 +382,7 @@ line level    source
  362          int Get_Gyro_Data(unsigned char gyro_id)
  363          {
  364   1        switch(gyro_id)
-C51 COMPILER V9.59.0.0   MAIN                                                              07/31/2020 07:55:37 PAGE 7   
+C51 COMPILER V9.59.0.0   MAIN                                                              07/31/2020 08:06:23 PAGE 7   
 
  365   1        {
  366   2          case 1: return GetData(ACCEL_XOUT_H); break;
@@ -429,7 +429,7 @@ line level    source
  407   2          case 4:return (int)((float)((float)Get_Gyro_Data(4)/16384)*9.8*100);
  408   2          case 5:return (int)((float)((float)Get_Gyro_Data(5)/16384)*9.8*100);
  409   2          case 6:return (int)((float)((float)Get_Gyro_Data(6)/16384)*9.8*100);
- 410   2          case 7:return (int)(((float)((float)GetData(TEMP_OUT_H)/340)+36.53)*100);
+ 410   2          case 7:return (int)((float)((float)((float)GetData(TEMP_OUT_H)/340)+36.53)*100);
  411   2        }
  412   1        return 0;
  413   1      }
@@ -446,7 +446,7 @@ line level    source
  424   2        }
  425   1        
  426   1        if(num == 0)                  //当数值为0时
-C51 COMPILER V9.59.0.0   MAIN                                                              07/31/2020 07:55:37 PAGE 8   
+C51 COMPILER V9.59.0.0   MAIN                                                              07/31/2020 08:06:23 PAGE 8   
 
  427   1          SendData('0');  //输出字符0
  428   1        else                      //当数值不为0时
@@ -510,7 +510,7 @@ line level    source
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-C51 COMPILER V9.59.0.0   MAIN                                                              07/31/2020 07:55:37 PAGE 9   
+C51 COMPILER V9.59.0.0   MAIN                                                              07/31/2020 08:06:23 PAGE 9   
 
    CODE SIZE        =   1998    ----
    CONSTANT SIZE    =    127    ----
