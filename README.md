@@ -36,5 +36,60 @@
 
 ***
 
+### Main
+
+**实现功能：**
+
+* 上电自检，通过串口发送自检结果[串口设置为，波特率115200，无校检，1位停止位]
+
+效果图：
+
+![上电自检效果图](image/2.png)
+
+​	
+
+* 摇晃触发眩晕表情，平时是眯眯眼状态
+
+效果视频：
+
+## [哔哩哔哩视频导航](https://www.bilibili.com/video/BV13C4y1874Z/)
+
+**遇到的坑：**
+
+* 跨文件引用变量，需要加上```extern```修饰，比如说一个```mpu6050.c```的文件里面有了一个函数值需要在```mian.c```里面使用，这时候就需要使用```extern```修饰
+
+  例如：
+
+  ```c
+  //mpu6050.c文件内容
+  unsigned char temp;
+  //main.c文件内容
+  extern unsigned char temp;
+  temp = 0xff;		//然后就可以在mian里面对temp变量进行操作了
+  ```
+
+* 报错 L104
+
+  这是因为文件内有重复定义的变量，这时候可以通过观察错误信息，然后通过CTRL + F的形式查出重复的变量/函数
+
+* 数据类型错误
+
+  这种一般是开发为了简便，会在最开始的地方重定义数据类型
+
+  例如：
+
+  ```c
+  typedef 	unsigned char	u8;
+  typedef 	unsigned int	u16;
+  typedef 	unsigned long	u32;
+  //或者是宏定义的样子
+  #define  u8 unsigned char 
+  #define  u32 unsigned int 
+  ```
+
+  这个样子会比较方便，不用写一长串，但是进行移植的时候一定要用全部替换先全换成正常的```unsigned char``` 这种形式，防止移植出现问题，因为各种例程的数据类型重定义的名字都不大一样
+
+
+
 # 未完待续…………
 
