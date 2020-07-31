@@ -1,0 +1,145 @@
+C51 COMPILER V9.59.0.0   UART                                                              07/31/2020 09:07:19 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE UART
+OBJECT MODULE PLACED IN .\Objects\uart.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE uart.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\uart
+                    -.lst) TABS(2) OBJECT(.\Objects\uart.obj)
+
+line level    source
+
+   1          #include "uart.h"
+   2          #include "config.h"
+   3          
+   4          /* 校检位变量声明 */
+   5          bit busy;
+   6          
+   7          /*uart初始化函数*/
+   8          void uart_init ()
+   9          {
+  10   1        ACC = P_SW1;
+  11   1          ACC &= ~(S1_S0 | S1_S1);    //S1_S0=0 S1_S1=0
+  12   1          P_SW1 = ACC;                //(P3.0/RxD, P3.1/TxD)
+  13   1        #if (PARITYBIT == NONE_PARITY)
+  14   1          SCON = 0x50;                //8位可变波特率
+  15   1        #elif (PARITYBIT == ODD_PARITY) || (PARITYBIT == EVEN_PARITY) || (PARITYBIT == MARK_PARITY)
+                  SCON = 0xda;                //9位可变波特率,校验位初始为1
+                #elif (PARITYBIT == SPACE_PARITY)
+                  SCON = 0xd2;                //9位可变波特率,校验位初始为0
+                #endif
+  20   1      
+  21   1          /* uart相关寄存器设置 */
+  22   1          T2L = (65536 - (FOSC/4/BAUD));   //设置波特率重装值
+  23   1          T2H = (65536 - (FOSC/4/BAUD))>>8;
+  24   1          AUXR = 0x14;                //T2为1T模式, 并启动定时器2
+  25   1          AUXR |= 0x01;               //选择定时器2为串口1的波特率发生器
+  26   1          ES = 1;                     //使能串口1中断
+  27   1          EA = 1;
+  28   1      }
+  29          
+  30          /*串口数据发送*/
+  31          void SendData(unsigned char dat)
+  32          {
+  33   1          while (busy);               //等待前面的数据发送完成
+  34   1          ACC = dat;                  //获取校验位P (PSW.0)
+  35   1          if (P)                      //根据P来设置校验位
+  36   1          {
+  37   2          #if (PARITYBIT == ODD_PARITY)
+                    TB8 = 0;                //设置校验位为0
+                  #elif (PARITYBIT == EVEN_PARITY)
+                    TB8 = 1;                //设置校验位为1
+                  #endif
+  42   2          }
+  43   1          else
+  44   1          {
+  45   2          #if (PARITYBIT == ODD_PARITY)
+                        TB8 = 1;                //设置校验位为1
+                  #elif (PARITYBIT == EVEN_PARITY)
+                        TB8 = 0;                //设置校验位为0
+                  #endif
+  50   2          }
+  51   1          busy = 1;
+  52   1          SBUF = ACC;                 //写数据到UART数据寄存器
+  53   1      }
+  54          
+C51 COMPILER V9.59.0.0   UART                                                              07/31/2020 09:07:19 PAGE 2   
+
+  55          /*发送字符串*/
+  56          void SendString(char *s)
+  57          {
+  58   1          while (*s)                  //检测字符串结束标志
+  59   1          {
+  60   2              SendData(*s++);         //发送当前字符
+  61   2          }
+  62   1      }
+  63          
+  64          /*uart发送long数值*/
+  65          void serial_one_send_number(long num)
+  66          {
+  67   1        long dat = 0;
+  68   1        unsigned char  length = 0;
+  69   1        if(num < 0)                   //当数值为负数时
+  70   1        {
+  71   2          SendData('-');  //输出负号
+  72   2          num = -num;                 //将数值取相反数
+  73   2        }
+  74   1        
+  75   1        if(num == 0)                  //当数值为0时
+  76   1          SendData('0');  //输出字符0
+  77   1        else                      //当数值不为0时
+  78   1        {
+  79   2          while(num)                  //将数值倒过来
+  80   2          {
+  81   3            dat = dat * 10;
+  82   3            dat = dat + num % 10;
+  83   3            num = num / 10;
+  84   3            length++;
+  85   3          }
+  86   2          
+  87   2          while(length--)             //从第一位开始输出倒过来的数值
+  88   2          {
+  89   3            SendData(dat % 10 + '0');
+  90   3            dat = dat / 10;
+  91   3          }
+  92   2        }
+  93   1      }
+  94          
+  95          /* uart发送float数值 */
+  96          void serial_one_send_float(double float_val, char bit_val)
+  97          {
+  98   1        long xdata value_int = 0;
+  99   1        long xdata value_flt = 0;
+ 100   1        
+ 101   1        if(float_val < 0)
+ 102   1        {
+ 103   2          SendData('-');
+ 104   2          float_val = -float_val;
+ 105   2        }
+ 106   1        
+ 107   1        value_int = (long)float_val;
+ 108   1        
+ 109   1        float_val = float_val - (double)value_int;
+ 110   1        
+ 111   1        for(;bit_val;bit_val--)
+ 112   1          float_val = float_val * 10;
+ 113   1        
+ 114   1        serial_one_send_number(value_int);
+ 115   1        SendData('.');
+ 116   1        serial_one_send_number((long)float_val);
+C51 COMPILER V9.59.0.0   UART                                                              07/31/2020 09:07:19 PAGE 3   
+
+ 117   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    526    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----       8
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      17
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
